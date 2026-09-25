@@ -7,11 +7,6 @@
 <meta name="description" content="Проекты на Arduino для новичков, калькулятор резисторов, закон Ома и другие инструменты.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%2300979D'/><text y='72' x='50' text-anchor='middle' font-size='62' font-family='Arial' font-weight='bold' fill='white'>A</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-
-<!-- Yandex Autoplacement 20095830 -->
-<script src="https://yandex.ru/ads/system/context.js" async></script>
-<script data-page-id="20095830" src="https://yandex.ru/ads/system/ap-loader.js" async></script>
-
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -145,7 +140,6 @@ code{font-family:var(--mono)}
 .breadcrumbs{font-size:.85rem;color:var(--muted);margin-bottom:18px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .breadcrumbs a{color:var(--muted)}.breadcrumbs a:hover{color:var(--accent)}
 .breadcrumbs span{opacity:.5}
-.ad-slot{margin:30px 0;min-height:90px;display:flex;align-items:center;justify-content:center;background:var(--surface-2);border:1px dashed var(--border);border-radius:var(--radius);color:var(--muted);font-size:.8rem}
 .site-footer{background:var(--surface);border-top:1px solid var(--border);padding:44px 0 22px;margin-top:50px}
 .footer-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:34px;margin-bottom:34px}
 .site-footer h4{font-size:.82rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin-bottom:14px}
@@ -633,7 +627,6 @@ function renderCode(code, name){
    РОУТЕР
    ========================================================= */
 const app = document.getElementById('app');
-const AD = '<div class="ad-slot" style="max-width:728px;margin:30px auto">Рекламный блок (вставьте код AdSense)</div>';
 
 function navigate(){
   const hash = location.hash.slice(1) || '/';
@@ -724,8 +717,6 @@ function renderHome(){
     </div>
   </section>
 
-  ${AD}
-
   <section class="section">
     <div class="container">
       <div class="section-head"><h2>Проекты для новичков</h2><p>Каждый — с кодом, деталями и пошаговой сборкой</p></div>
@@ -764,7 +755,6 @@ function renderProjects(){
       <div class="breadcrumbs"><a href="#/">Главная</a><span>/</span><span>Проекты</span></div>
       <h1>Проекты на Arduino</h1>
       <p class="lead" style="max-width:70ch">Все проекты проверены на реальном железе.</p>
-      ${AD}
       <div class="filters" style="margin-top:20px">
         <input type="search" class="search-input" id="projectSearch" placeholder="🔍 Поиск: дальномер, дисплей, светодиод...">
       </div>
@@ -834,12 +824,10 @@ function renderProject(id){
         <span class="badge">⏱ ${p.time}</span>
       </div>
       <p class="lead" style="margin-top:20px">${p.description}</p>
-      ${AD}
       <section class="section-sm"><h2>Что понадобится</h2><ul class="comp-list">${p.components.map(c=>'<li>'+c+'</li>').join('')}</ul></section>
       <section class="section-sm"><h2>Порядок сборки</h2><ol class="steps">${p.steps.map(s=>'<li><b>'+s.t+'</b>'+s.d+'</li>').join('')}</ol></section>
       <section class="section-sm"><h2>Код скетча</h2>${renderCode(p.code, p.id + '.ino')}</section>
       <section class="section-sm"><h2>Полезные советы</h2><ul class="comp-list">${p.tips.map(t=>'<li>'+t+'</li>').join('')}</ul></section>
-      ${AD}
       <div style="display:flex;gap:12px;flex-wrap:wrap;margin:34px 0">
         <a class="btn btn-ghost" href="#/projects">← Все проекты</a>
         <a class="btn btn-primary" href="#/resistor">Калькулятор резисторов</a>
@@ -889,7 +877,6 @@ function renderResistor(){
       <div class="breadcrumbs"><a href="#/">Главная</a><span>/</span><a href="#/tools">Инструменты</a><span>/</span><span>Калькулятор резисторов</span></div>
       <h1>Калькулятор резисторов</h1>
       <p class="lead" style="max-width:70ch">Определите номинал по цветным полосам или подберите цвета под нужное сопротивление.</p>
-      ${AD}
       <div class="tool-panel" style="margin-top:26px">
         <h2 style="margin-bottom:18px">Определить номинал по полосам</h2>
         <div class="chips" style="margin-bottom:24px" id="bandChips">
@@ -919,8 +906,6 @@ function renderResistor(){
         </div>
         <div class="result-box" id="resistorResult"></div>
       </div>
-
-      ${AD}
 
       <div class="tool-panel" style="margin-top:26px">
         <h2 style="margin-bottom:18px">Подобрать цвета по сопротивлению</h2>
@@ -1076,7 +1061,6 @@ function renderTools(){
       <div class="breadcrumbs"><a href="#/">Главная</a><span>/</span><span>Инструменты</span></div>
       <h1>Инженерные калькуляторы</h1>
       <p class="lead" style="max-width:70ch">Шесть инструментов, которые закрывают 90 % бытовых расчётов.</p>
-      ${AD}
 
       <section class="tool-panel" style="margin-top:34px">
         <h2>⚡ Закон Ома</h2>
@@ -1101,8 +1085,6 @@ function renderTools(){
         <button class="btn btn-primary" id="ledBtn">Рассчитать</button>
         <div class="result-box"><div class="result-main" id="ledResult">—</div></div>
       </section>
-
-      ${AD}
 
       <section class="tool-panel" style="margin-top:26px">
         <h2>📐 Делитель напряжения</h2>
@@ -1145,8 +1127,6 @@ function renderTools(){
         <button class="btn btn-primary" id="adcBtn">Рассчитать</button>
         <div class="result-box"><div class="result-main" id="adcResult">—</div></div>
       </section>
-
-      ${AD}
     </div>
   </section>`;
 
@@ -1240,7 +1220,6 @@ function renderBasics(){
       <div class="breadcrumbs"><a href="#/">Главная</a><span>/</span><span>Основы</span></div>
       <h1>Основы Arduino</h1>
       <p class="lead">Короткий гайд для тех, кто держит плату впервые.</p>
-      ${AD}
 
       <h2 style="margin-top:36px">Что такое Arduino</h2>
       <p>Arduino — это маленькая плата с микроконтроллером, которую можно запрограммировать на что угодно. Программы пишутся на упрощённом C++ в Arduino IDE и загружаются по USB.</p>
@@ -1285,7 +1264,6 @@ void loop() {
         Всегда ставьте токоограничивающий резистор перед светодиодом. Не подавайте на пины больше 5 В. Мощные моторы — от отдельного БП.
       </div>
 
-      ${AD}
       <div class="card" style="margin-top:30px;text-align:center">
         <h3>Готовы попробовать?</h3>
         <p style="margin-bottom:16px">Начните с самого простого проекта.</p>
@@ -1303,7 +1281,6 @@ function renderAbout(){
       <div class="breadcrumbs"><a href="#/">Главная</a><span>/</span><span>О сайте</span></div>
       <h1>О проекте ArduInfo</h1>
       <p class="lead">Мы делаем вход в электронику простым и безболезненным.</p>
-      ${AD}
       <h2 style="margin-top:30px">Зачем этот сайт</h2>
       <p>Информация об Arduino разбросана по форумам и старым статьям. Новичок тонет в потоке и часто бросает на второй вечер. ArduInfo собирает самое нужное в одном месте.</p>
 
