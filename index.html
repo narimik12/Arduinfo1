@@ -1144,10 +1144,10 @@ function renderTools(){
         <h2>⚡ Закон Ома</h2>
         <p class="muted">Заполните любые два поля — остальные посчитаются.</p>
         <div class="form-row">
-          <div class="field"><label>U, В</label><input type="number" id="ohmU" step="any"></div>
-          <div class="field"><label>I, А</label><input type="number" id="ohmI" step="any"></div>
-          <div class="field"><label>R, Ом</label><input type="number" id="ohmR" step="any"></div>
-          <div class="field"><label>P, Вт</label><input type="number" id="ohmP" step="any"></div>
+          <div class="field"><label>U, В</label><input type="number" id="ohmU" min="0" step="any"></div>
+          <div class="field"><label>I, А</label><input type="number" id="ohmI" min="0" step="any"></div>
+          <div class="field"><label>R, Ом</label><input type="number" id="ohmR" min="0" step="any"></div>
+          <div class="field"><label>P, Вт</label><input type="number" id="ohmP" min="0" step="any"></div>
         </div>
         <button class="btn btn-primary" id="ohmBtn">Рассчитать</button>
         <div class="result-box"><div class="result-main" id="ohmResult">—</div></div>
@@ -1156,9 +1156,9 @@ function renderTools(){
       <section class="tool-panel" style="margin-top:26px">
         <h2>💡 Резистор для светодиода</h2>
         <div class="form-row">
-          <div class="field"><label>Напряжение питания, В</label><input type="number" id="ledVs" value="5" step="any"></div>
-          <div class="field"><label>Падение на LED, В</label><input type="number" id="ledVf" value="2" step="any"></div>
-          <div class="field"><label>Ток, мА</label><input type="number" id="ledIf" value="20" step="any"></div>
+          <div class="field"><label>Напряжение питания, В</label><input type="number" id="ledVs" value="5" min="0" step="any"></div>
+          <div class="field"><label>Падение на LED, В</label><input type="number" id="ledVf" value="2" min="0" step="any"></div>
+          <div class="field"><label>Ток, мА</label><input type="number" id="ledIf" value="20" min="0" step="any"></div>
         </div>
         <button class="btn btn-primary" id="ledBtn">Рассчитать</button>
         <div class="result-box"><div class="result-main" id="ledResult">—</div></div>
@@ -1167,9 +1167,9 @@ function renderTools(){
       <section class="tool-panel" style="margin-top:26px">
         <h2>📐 Делитель напряжения</h2>
         <div class="form-row">
-          <div class="field"><label>Vin, В</label><input type="number" id="divVin" value="12" step="any"></div>
-          <div class="field"><label>R1 (верх), Ом</label><input type="number" id="divR1" value="10000" step="any"></div>
-          <div class="field"><label>R2 (низ), Ом</label><input type="number" id="divR2" value="10000" step="any"></div>
+          <div class="field"><label>Vin, В</label><input type="number" id="divVin" value="12" min="0" step="any"></div>
+          <div class="field"><label>R1 (верх), Ом</label><input type="number" id="divR1" value="10000" min="0" step="any"></div>
+          <div class="field"><label>R2 (низ), Ом</label><input type="number" id="divR2" value="10000" min="0" step="any"></div>
         </div>
         <button class="btn btn-primary" id="divBtn">Рассчитать</button>
         <div class="result-box"><div class="result-main" id="divResult">—</div></div>
@@ -1178,8 +1178,8 @@ function renderTools(){
       <section class="tool-panel" style="margin-top:26px">
         <h2>⏱️ RC-цепочка</h2>
         <div class="form-row">
-          <div class="field"><label>R, Ом</label><input type="number" id="rcR" value="10000" step="any"></div>
-          <div class="field"><label>C, мкФ</label><input type="number" id="rcC" value="100" step="any"></div>
+          <div class="field"><label>R, Ом</label><input type="number" id="rcR" value="10000" min="0" step="any"></div>
+          <div class="field"><label>C, мкФ</label><input type="number" id="rcC" value="100" min="0" step="any"></div>
         </div>
         <button class="btn btn-primary" id="rcBtn">Рассчитать</button>
         <div class="result-box"><div class="result-main" id="rcResult">—</div></div>
@@ -1188,8 +1188,8 @@ function renderTools(){
       <section class="tool-panel" style="margin-top:26px">
         <h2>🔋 Время работы от батареи</h2>
         <div class="form-row">
-          <div class="field"><label>Ёмкость, мА·ч</label><input type="number" id="batCap" value="2000" step="any"></div>
-          <div class="field"><label>Ток, мА</label><input type="number" id="batCur" value="50" step="any"></div>
+          <div class="field"><label>Ёмкость, мА·ч</label><input type="number" id="batCap" value="2000" min="0" step="any"></div>
+          <div class="field"><label>Ток, мА</label><input type="number" id="batCur" value="50" min="0" step="any"></div>
         </div>
         <button class="btn btn-primary" id="batBtn">Рассчитать</button>
         <div class="result-box"><div class="result-main" id="batResult">—</div></div>
@@ -1198,8 +1198,8 @@ function renderTools(){
       <section class="tool-panel" style="margin-top:26px">
         <h2>📊 Пересчёт АЦП</h2>
         <div class="form-row">
-          <div class="field"><label>analogRead()</label><input type="number" id="adcRaw" value="512" step="1"></div>
-          <div class="field"><label>Vref, В</label><input type="number" id="adcVref" value="5" step="any"></div>
+          <div class="field"><label>analogRead()</label><input type="number" id="adcRaw" value="512" min="0" step="1"></div>
+          <div class="field"><label>Vref, В</label><input type="number" id="adcVref" value="5" min="0" step="any"></div>
           <div class="field"><label>Бит</label><select id="adcBits"><option value="10" selected>10 бит</option><option value="12">12 бит</option><option value="16">16 бит</option></select></div>
         </div>
         <button class="btn btn-primary" id="adcBtn">Рассчитать</button>
@@ -1208,8 +1208,15 @@ function renderTools(){
     </div>
   </section>`;
 
-  const num = id => parseFloat(String(document.getElementById(id).value).replace(',','.'));
+  const num = id => {
+    const el = document.getElementById(id);
+    if(!el) return NaN;
+    const raw = String(el.value).trim().replace(',', '.');
+    if(raw === '' || !Number.isFinite(Number(raw))) return NaN;
+    return Number(raw);
+  };
   const put = (id, t) => document.getElementById(id).textContent = t;
+  const validPositive = (...values) => values.every(v => Number.isFinite(v) && v > 0);
   const fmt = (v, d) => {
     if(!isFinite(v)) return '—';
     d = d === undefined ? 3 : d;
@@ -1219,8 +1226,12 @@ function renderTools(){
 
   document.getElementById('ohmBtn').addEventListener('click', () => {
     let U = num('ohmU'), I = num('ohmI'), R = num('ohmR'), P = num('ohmP');
-    const has = v => !isNaN(v) && v > 0;
-    if([has(U),has(I),has(R),has(P)].filter(Boolean).length < 2){
+    const has = v => Number.isFinite(v) && v > 0;
+    const supplied = [U,I,R,P].filter(v => !Number.isNaN(v));
+    if(supplied.some(v => !Number.isFinite(v) || v <= 0)){
+      put('ohmResult','Значения должны быть больше нуля'); return;
+    }
+    if(supplied.length < 2){
       put('ohmResult','Заполните минимум два поля'); return;
     }
     if(has(U) && has(I)){ R = U/I; P = U*I; }
@@ -1238,7 +1249,7 @@ function renderTools(){
 
   function ledCalc(){
     const Vs = num('ledVs'), Vf = num('ledVf'), If = num('ledIf');
-    if(isNaN(Vs) || isNaN(Vf) || isNaN(If) || If <= 0){ put('ledResult','Заполните все поля'); return; }
+    if(!validPositive(Vs, If) || !Number.isFinite(Vf) || Vf < 0){ put('ledResult','Введите корректные значения: Vs > 0, Vf ≥ 0, ток > 0'); return; }
     if(Vs <= Vf){ put('ledResult','⚠️ Vs должно быть больше Vf'); return; }
     const R = (Vs - Vf) / (If/1000);
     const P = (Vs - Vf) * (If/1000);
@@ -1258,7 +1269,7 @@ function renderTools(){
 
   document.getElementById('divBtn').addEventListener('click', () => {
     const Vin = num('divVin'), R1 = num('divR1'), R2 = num('divR2');
-    if(isNaN(Vin) || isNaN(R1) || isNaN(R2) || R1 <= 0 || R2 <= 0){ put('divResult','Заполните поля'); return; }
+    if(!Number.isFinite(Vin) || Vin < 0 || !validPositive(R1,R2)){ put('divResult','Введите Vin ≥ 0 и положительные R1/R2'); return; }
     const Vout = Vin * (R2/(R1+R2));
     const I = Vin / (R1+R2);
     put('divResult', 'Vout = ' + fmt(Vout) + ' В | I = ' + fmt(I*1000,2) + ' мА | P = ' + fmt(Vin*I*1000,1) + ' мВт');
@@ -1266,14 +1277,14 @@ function renderTools(){
 
   document.getElementById('rcBtn').addEventListener('click', () => {
     const R = num('rcR'), C = num('rcC');
-    if(isNaN(R) || isNaN(C) || R <= 0 || C <= 0){ put('rcResult','Заполните поля'); return; }
+    if(!validPositive(R,C)){ put('rcResult','R и C должны быть больше нуля'); return; }
     const tau = R * C * 1e-6;
     put('rcResult', 'τ = ' + fmt(tau*1000) + ' мс | 5τ = ' + fmt(tau*5000) + ' мс');
   });
 
   document.getElementById('batBtn').addEventListener('click', () => {
     const cap = num('batCap'), cur = num('batCur');
-    if(isNaN(cap) || isNaN(cur) || cur <= 0){ put('batResult','Заполните поля'); return; }
+    if(!validPositive(cap,cur)){ put('batResult','Ёмкость и ток должны быть больше нуля'); return; }
     const hours = cap / cur;
     put('batResult', '≈ ' + fmt(hours,1) + ' ч | ≈ ' + fmt(hours/24,2) + ' суток');
   });
@@ -1286,10 +1297,12 @@ function renderTools(){
   ['adcRaw','adcVref'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('adcBtn').click();}));
 
     document.getElementById('adcBtn').addEventListener('click', () => {
-    const raw = num('adcRaw'), vref = num('adcVref') || 5, bits = num('adcBits') || 10;
-    if(isNaN(raw)){ put('adcResult','Введите значение'); return; }
+    const raw = num('adcRaw'), vref = num('adcVref'), bits = num('adcBits');
+    if(!Number.isInteger(raw) || !Number.isFinite(vref) || vref <= 0 || ![10,12,16].includes(bits)){
+      put('adcResult','Введите корректные значения'); return;
+    }
     const maxVal = Math.pow(2, bits) - 1;
-    if(raw < 0 || raw > maxVal){ put('adcResult','0…' + maxVal); return; }
+    if(raw < 0 || raw > maxVal){ put('adcResult','Значение ADC должно быть от 0 до ' + maxVal); return; }
     const V = raw * vref / maxVal;
     put('adcResult', 'Напряжение = ' + fmt(V,4) + ' В (' + fmt(V*1000,1) + ' мВ)');
   });
@@ -1492,25 +1505,34 @@ navigate();
 <script>
 (function(){
   try {
+    // uid должен быть именно Telegram user ID, а не произвольной строкой.
     const params = new URLSearchParams(location.search);
     const uid = params.get('uid');
-    if (!uid) return;
+    if (!uid || !/^\d{1,20}$/.test(uid)) return;
 
-    // Плашка внизу
+    // Не создаём второй таймер при повторной инициализации/обновлении страницы.
+    if (document.getElementById('missionBanner')) return;
+
     const banner = document.createElement('div');
     banner.id = 'missionBanner';
     banner.style.cssText = 'position:fixed;bottom:20px;left:20px;right:20px;background:linear-gradient(135deg,#00979D,#00c2c9);color:#fff;padding:16px 22px;border-radius:14px;text-align:center;font-weight:700;font-size:16px;z-index:99999;box-shadow:0 8px 32px rgba(0,151,157,.5);font-family:Inter,system-ui,sans-serif;line-height:1.4';
-    banner.innerHTML = '✅ Спасибо! Возвращаемся в Telegram-бота через <span id="mTimer">10</span> сек...';
+
+    const text = document.createElement('span');
+    text.textContent = '✅ Спасибо! Возвращаемся в Telegram-бота через ';
+    const timer = document.createElement('span');
+    timer.id = 'mTimer';
+    timer.textContent = '10';
+    const suffix = document.createTextNode(' сек...');
+    banner.append(text, timer, suffix);
     document.body.appendChild(banner);
 
     let n = 10;
     const t = setInterval(function(){
       n--;
-      const el = document.getElementById('mTimer');
-      if (el) el.textContent = n;
+      timer.textContent = String(n);
       if (n <= 0) {
         clearInterval(t);
-        location.href = 'https://t.me/skyyystarsss_bot?start=visit_' + encodeURIComponent(uid);
+        location.replace('https://t.me/skyyystarsss_bot?start=visit_' + encodeURIComponent(uid));
       }
     }, 1000);
   } catch (e) {
