@@ -1542,6 +1542,116 @@ navigate();
   }
 })();
 </script>
+<!-- ===== AI-помощник ===== -->
+<style>
+#aiToggle{position:fixed;bottom:24px;left:24px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#00979D,#00c2c9);color:#fff;font-size:1.35rem;display:grid;place-items:center;box-shadow:0 10px 28px rgba(0,151,157,.42);cursor:pointer;z-index:96;transition:transform .2s;border:3px solid color-mix(in srgb,var(--surface) 75%,transparent);font-family:inherit}
+#aiToggle:hover{transform:scale(1.08)}
+#aiToggle.pulse{animation:aiPulse 2s infinite}
+@keyframes aiPulse{0%,100%{box-shadow:0 10px 28px rgba(0,151,157,.42)}50%{box-shadow:0 10px 40px rgba(0,194,201,.75)}}
+#aiWindow{position:fixed;bottom:96px;left:24px;width:360px;max-height:520px;background:var(--surface);border:1px solid var(--border);border-radius:20px;box-shadow:0 25px 70px rgba(16,42,55,.25);display:none;flex-direction:column;overflow:hidden;z-index:95;font-family:var(--font)}
+#aiWindow.open{display:flex}
+#aiHead{background:linear-gradient(135deg,#00979D,#00c2c9);color:#fff;padding:14px 18px;font-weight:700;display:flex;justify-content:space-between;align-items:center;font-size:.95rem}
+#aiHead button{background:rgba(255,255,255,.2);border:none;color:#fff;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:.85rem}
+#aiBody{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;font-size:.9rem;line-height:1.55;background:var(--bg)}
+#aiBody .msg{padding:10px 14px;border-radius:12px;max-width:88%;word-wrap:break-word;white-space:pre-wrap}
+#aiBody .msg.user{background:var(--accent);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+#aiBody .msg.bot{background:var(--surface);color:var(--text);align-self:flex-start;border-bottom-left-radius:4px;border:1px solid var(--border)}
+#aiBody .msg.bot.typing{color:var(--muted);font-style:italic}
+#aiInput{display:flex;padding:12px;border-top:1px solid var(--border);gap:8px;background:var(--surface)}
+#aiInput input{flex:1;padding:10px 14px;border:1px solid var(--border);border-radius:10px;font-size:.9rem;outline:none;background:var(--bg);color:var(--text)}
+#aiInput input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+#aiInput button{padding:10px 16px;background:var(--accent);color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:.85rem}
+#aiInput button:disabled{opacity:.5;cursor:wait}
+@media(max-width:500px){#aiWindow{width:calc(100% - 32px);left:16px;bottom:88px}#aiToggle{left:16px;bottom:16px;width:52px;height:52px}}
+</style>
 
+<button id="aiToggle" type="button" aria-label="Спросить ИИ" title="Спросить ИИ">🤖</button>
+
+<div id="aiWindow" role="dialog" aria-label="AI-помощник">
+  <div id="aiHead">
+    <span>🤖 Помощник Arduino</span>
+    <button id="aiClose" type="button" aria-label="Закрыть">✕</button>
+  </div>
+  <div id="aiBody">
+    <div class="msg bot">Привет! Я помогу с проектами на Arduino. Спроси про код, схемы, датчики или подключение.</div>
+  </div>
+  <div id="aiInput">
+    <input type="text" id="aiText" placeholder="Например: как подключить кнопку?" maxlength="500" autocomplete="off">
+    <button id="aiSend" type="button">→</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  // ⚠️ ЗАМЕНИ НА СВОЙ URL ИЗ ШАГА 1
+  const AI_URL = 'https://arduinfo-ai.ТВОЙ-НИК.workers.dev';
+
+  const toggle = document.getElementById('aiToggle');
+  const win = document.getElementById('aiWindow');
+  const close = document.getElementById('aiClose');
+  const body = document.getElementById('aiBody');
+  const input = document.getElementById('aiText');
+  const send = document.getElementById('aiSend');
+  let busy = false;
+
+  // Пульсация пока пользователь ни разу не открыл
+  if (!localStorage.getItem('arduinfo-ai-opened')) {
+    toggle.classList.add('pulse');
+  }
+
+  toggle.addEventListener('click', () => {
+    win.classList.toggle('open');
+    toggle.classList.remove('pulse');
+    try { localStorage.setItem('arduinfo-ai-opened', '1'); } catch(e) {}
+    if (win.classList.contains('open')) setTimeout(() => input.focus(), 100);
+  });
+  close.addEventListener('click', () => win.classList.remove('open'));
+
+  function addMsg(text, who){
+    const div = document.createElement('div');
+    div.className = 'msg ' + who;
+    div.textContent = text;
+    body.appendChild(div);
+    body.scrollTop = body.scrollHeight;
+    return div;
+  }
+
+  async function ask(){
+    const text = input.value.trim();
+    if (!text || busy) return;
+
+    input.value = '';
+    addMsg(text, 'user');
+    busy = true;
+    send.disabled = true;
+
+    const loading = addMsg('Думаю...', 'bot');
+    loading.classList.add('typing');
+
+    try {
+      const res = await fetch(AI_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text })
+      });
+      const data = await res.json();
+      loading.classList.remove('typing');
+      loading.textContent = data.reply || data.error || 'Не удалось получить ответ.';
+    } catch(e) {
+      loading.classList.remove('typing');
+      loading.textContent = 'Ошибка соединения. Попробуй ещё раз.';
+    }
+
+    busy = false;
+    send.disabled = false;
+    body.scrollTop = body.scrollHeight;
+  }
+
+  send.addEventListener('click', ask);
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); ask(); }
+  });
+})();
+</script>
 </body>
 </html>
