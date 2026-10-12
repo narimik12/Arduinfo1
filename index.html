@@ -9,11 +9,8 @@
 <link rel="apple-touch-icon" href="/favicon.svg">
 <meta name="theme-color" content="#00979D">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-
-<!-- GoatCounter — счётчик посетителей -->
 <script data-goatcounter="https://narim.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 <script src="icons.js"></script>
-
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -169,8 +166,6 @@ tr:last-child td{border-bottom:none}
 tbody tr:hover{background:var(--surface-2)}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 .fade-up{animation:fadeUp .45s ease both}
-
-/* ===== ArduInfo UI refresh ===== */
 :root{--radius:18px;--radius-sm:12px;--shadow:0 8px 30px rgba(16,42,55,.055);--shadow-lg:0 22px 65px rgba(16,42,55,.13)}
 html{scroll-padding-top:82px}
 body{background:radial-gradient(1200px 600px at 50% -300px,var(--accent-soft),transparent 65%),var(--bg)}
@@ -203,7 +198,6 @@ body{background:radial-gradient(1200px 600px at 50% -300px,var(--accent-soft),tr
 @media(max-width:900px){.site-header{height:64px}.header-inner{height:64px}.nav{top:64px;padding:12px 20px 20px}.hero{padding:54px 0 42px}.hero h1{font-size:clamp(2.2rem,10vw,3.5rem)}.tool-panel{padding:22px}}
 @media(max-width:640px){.container{padding:0 16px}.section{padding:48px 0}.hero-actions .btn{width:100%}.hero-stats{gap:20px}.hero-art{font-size:.72rem;padding:18px}.card{padding:20px}.tool-panel{padding:18px}.to-top{right:16px;bottom:16px}.toast{max-width:calc(100vw - 32px);white-space:normal;text-align:center}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.001ms!important;transition-duration:.001ms!important}}
-
 </style>
 </head>
 <body>
@@ -230,7 +224,7 @@ body{background:radial-gradient(1200px 600px at 50% -300px,var(--accent-soft),tr
 document.getElementById('themeToggle').innerHTML = icon('moon', 20);
 document.getElementById('menuBtn').innerHTML = icon('menu', 20);
 </script>
-  
+
 <main id="app" tabindex="-1"></main>
 
 <footer class="site-footer">
@@ -273,9 +267,6 @@ document.getElementById('menuBtn').innerHTML = icon('menu', 20);
 </footer>
 
 <script>
-/* =========================================================
-   ДАННЫЕ ПРОЕКТОВ
-   ========================================================= */
 const PROJECTS = [
   { id:'blink', title:'Мигающий светодиод (Blink)', level:'Новичок', category:'Основы', time:'10 минут', icon:'bulb',
     short:'Самый первый проект каждого ардуинщика: заставляем встроенный светодиод мигать.',
@@ -287,18 +278,7 @@ const PROJECTS = [
       {t:'Вставьте код',d:'Скопируйте скетч ниже в редактор Arduino IDE.'},
       {t:'Загрузите скетч',d:'Нажмите «Загрузить». Через пару секунд светодиод L начнёт мигать.'}
     ],
-    code:`// Проект 1: Мигающий светодиод
-
-void setup() {
-  pinMode(LED_BUILTIN, OUTPUT);
-}
-
-void loop() {
-  digitalWrite(LED_BUILTIN, HIGH);
-  delay(1000);
-  digitalWrite(LED_BUILTIN, LOW);
-  delay(1000);
-}`,
+    code:`// Проект 1: Мигающий светодиод\n\nvoid setup() {\n  pinMode(LED_BUILTIN, OUTPUT);\n}\n\nvoid loop() {\n  digitalWrite(LED_BUILTIN, HIGH);\n  delay(1000);\n  digitalWrite(LED_BUILTIN, LOW);\n  delay(1000);\n}`,
     tips:['Если не мигает — проверьте COM-порт.','LED_BUILTIN для Uno равен 13.','Измените delay() и посмотрите, что получится.']
   },
   { id:'button-led', title:'Кнопка управляет светодиодом', level:'Новичок', category:'Основы', time:'20 минут', icon:'button',
@@ -310,26 +290,7 @@ void loop() {
       {t:'Загрузите скетч',d:'Скопируйте код и загрузите.'},
       {t:'Проверьте',d:'При нажатии светодиод горит. Откройте Монитор порта.'}
     ],
-    code:`// Проект 2: Кнопка + светодиод
-const int BUTTON_PIN = 2;
-const int LED_PIN    = 13;
-
-void setup() {
-  pinMode(LED_PIN, OUTPUT);
-  pinMode(BUTTON_PIN, INPUT_PULLUP);
-  Serial.begin(9600);
-}
-
-void loop() {
-  int state = digitalRead(BUTTON_PIN);
-  if (state == LOW) {
-    digitalWrite(LED_PIN, HIGH);
-    Serial.println("Кнопка нажата");
-  } else {
-    digitalWrite(LED_PIN, LOW);
-  }
-  delay(20);
-}`,
+    code:`// Проект 2: Кнопка + светодиод\nconst int BUTTON_PIN = 2;\nconst int LED_PIN    = 13;\n\nvoid setup() {\n  pinMode(LED_PIN, OUTPUT);\n  pinMode(BUTTON_PIN, INPUT_PULLUP);\n  Serial.begin(9600);\n}\n\nvoid loop() {\n  int state = digitalRead(BUTTON_PIN);\n  if (state == LOW) {\n    digitalWrite(LED_PIN, HIGH);\n    Serial.println("Кнопка нажата");\n  } else {\n    digitalWrite(LED_PIN, LOW);\n  }\n  delay(20);\n}`,
     tips:['INPUT_PULLUP — внешний резистор не нужен.','Резистор 220 Ом обязателен для LED.','delay(20) защищает от дребезга.']
   },
   { id:'traffic-light', title:'Светофор на трёх светодиодах', level:'Новичок', category:'Основы', time:'25 минут', icon:'traffic',
@@ -341,29 +302,7 @@ void loop() {
       {t:'Загрузите код',d:'Скетч использует массив пинов и цикл for.'},
       {t:'Настройте тайминги',d:'Поменяйте задержки под себя.'}
     ],
-    code:`// Проект 3: Светофор
-const int RED    = 8;
-const int YELLOW = 9;
-const int GREEN  = 10;
-
-void setup() {
-  pinMode(RED, OUTPUT);
-  pinMode(YELLOW, OUTPUT);
-  pinMode(GREEN, OUTPUT);
-}
-
-void allOff() {
-  digitalWrite(RED, LOW);
-  digitalWrite(YELLOW, LOW);
-  digitalWrite(GREEN, LOW);
-}
-
-void loop() {
-  allOff(); digitalWrite(RED, HIGH);    delay(3000);
-  allOff(); digitalWrite(YELLOW, HIGH); delay(1000);
-  allOff(); digitalWrite(GREEN, HIGH);  delay(3000);
-  allOff(); digitalWrite(YELLOW, HIGH); delay(1000);
-}`,
+    code:`// Проект 3: Светофор\nconst int RED    = 8;\nconst int YELLOW = 9;\nconst int GREEN  = 10;\n\nvoid setup() {\n  pinMode(RED, OUTPUT);\n  pinMode(YELLOW, OUTPUT);\n  pinMode(GREEN, OUTPUT);\n}\n\nvoid allOff() {\n  digitalWrite(RED, LOW);\n  digitalWrite(YELLOW, LOW);\n  digitalWrite(GREEN, LOW);\n}\n\nvoid loop() {\n  allOff(); digitalWrite(RED, HIGH);    delay(3000);\n  allOff(); digitalWrite(YELLOW, HIGH); delay(1000);\n  allOff(); digitalWrite(GREEN, HIGH);  delay(3000);\n  allOff(); digitalWrite(YELLOW, HIGH); delay(1000);\n}`,
     tips:['Функция allOff() убирает дублирование.','Добавьте кнопку для пешеходов.','Замените delay() на millis() для реалистичности.']
   },
   { id:'fade-led', title:'Плавное затухание светодиода (PWM)', level:'Новичок', category:'Основы', time:'15 минут', icon:'fade',
@@ -375,23 +314,7 @@ void loop() {
       {t:'Загрузите скетч',d:'LED плавно разгорается и гаснет.'},
       {t:'Поэкспериментируйте',d:'Попробуйте шаг 5 и задержку 30 мс.'}
     ],
-    code:`// Проект 4: Плавное затухание (PWM)
-const int LED_PIN = 9;
-
-void setup() {
-  pinMode(LED_PIN, OUTPUT);
-}
-
-void loop() {
-  for (int b = 0; b <= 255; b += 5) {
-    analogWrite(LED_PIN, b);
-    delay(30);
-  }
-  for (int b = 255; b >= 0; b -= 5) {
-    analogWrite(LED_PIN, b);
-    delay(30);
-  }
-}`,
+    code:`// Проект 4: Плавное затухание (PWM)\nconst int LED_PIN = 9;\n\nvoid setup() {\n  pinMode(LED_PIN, OUTPUT);\n}\n\nvoid loop() {\n  for (int b = 0; b <= 255; b += 5) {\n    analogWrite(LED_PIN, b);\n    delay(30);\n  }\n  for (int b = 255; b >= 0; b -= 5) {\n    analogWrite(LED_PIN, b);\n    delay(30);\n  }\n}`,
     tips:['analogWrite() только на пинах с ~.','ШИМ-частота на Uno ~490 Гц.','Тот же приём для моторов и ламп.']
   },
   { id:'ultrasonic', title:'Дальномер на HC-SR04', level:'Средний', category:'Датчики', time:'35 минут', icon:'radar',
@@ -403,32 +326,7 @@ void loop() {
       {t:'Загрузите',d:'Откройте Монитор порта на 9600.'},
       {t:'Проверьте',d:'Подносите руку — показания меняются.'}
     ],
-    code:`// Проект 5: Дальномер HC-SR04
-const int TRIG_PIN = 9;
-const int ECHO_PIN = 10;
-
-void setup() {
-  pinMode(TRIG_PIN, OUTPUT);
-  pinMode(ECHO_PIN, INPUT);
-  Serial.begin(9600);
-}
-
-long measureDistance() {
-  digitalWrite(TRIG_PIN, LOW);
-  delayMicroseconds(2);
-  digitalWrite(TRIG_PIN, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(TRIG_PIN, LOW);
-  long duration = pulseIn(ECHO_PIN, HIGH, 30000);
-  return duration * 0.0343 / 2;
-}
-
-void loop() {
-  long cm = measureDistance();
-  if (cm == 0) Serial.println("Вне зоны");
-  else { Serial.print("Расстояние: "); Serial.print(cm); Serial.println(" см"); }
-  delay(200);
-}`,
+    code:`// Проект 5: Дальномер HC-SR04\nconst int TRIG_PIN = 9;\nconst int ECHO_PIN = 10;\n\nvoid setup() {\n  pinMode(TRIG_PIN, OUTPUT);\n  pinMode(ECHO_PIN, INPUT);\n  Serial.begin(9600);\n}\n\nlong measureDistance() {\n  digitalWrite(TRIG_PIN, LOW);\n  delayMicroseconds(2);\n  digitalWrite(TRIG_PIN, HIGH);\n  delayMicroseconds(10);\n  digitalWrite(TRIG_PIN, LOW);\n  long duration = pulseIn(ECHO_PIN, HIGH, 30000);\n  return duration * 0.0343 / 2;\n}\n\nvoid loop() {\n  long cm = measureDistance();\n  if (cm == 0) Serial.println("Вне зоны");\n  else { Serial.print("Расстояние: "); Serial.print(cm); Serial.println(" см"); }\n  delay(200);\n}`,
     tips:['Работает от 2 см до 400 см.','Мягкие поверхности плохо отражают.','На ECHO — не больше 5 В.']
   },
   { id:'dht11', title:'Термометр и гигрометр на DHT11', level:'Средний', category:'Датчики', time:'30 минут', icon:'thermometer',
@@ -440,24 +338,7 @@ void loop() {
       {t:'Подключите',d:'VCC → 5V, GND → GND, DATA → 2, подтяжка 10 кОм.'},
       {t:'Загрузите',d:'Откройте Монитор порта.'}
     ],
-    code:`// Проект 6: DHT11
-#include <DHT.h>
-#define DHTPIN  2
-#define DHTTYPE DHT11
-DHT dht(DHTPIN, DHTTYPE);
-
-void setup() {
-  Serial.begin(9600);
-  dht.begin();
-}
-
-void loop() {
-  delay(2000);
-  float t = dht.readTemperature();
-  float h = dht.readHumidity();
-  if (isnan(t) || isnan(h)) { Serial.println("Ошибка!"); return; }
-  Serial.print("T: "); Serial.print(t); Serial.print(" C  H: "); Serial.print(h); Serial.println(" %");
-}`,
+    code:`// Проект 6: DHT11\n#include <DHT.h>\n#define DHTPIN  2\n#define DHTTYPE DHT11\nDHT dht(DHTPIN, DHTTYPE);\n\nvoid setup() {\n  Serial.begin(9600);\n  dht.begin();\n}\n\nvoid loop() {\n  delay(2000);\n  float t = dht.readTemperature();\n  float h = dht.readHumidity();\n  if (isnan(t) || isnan(h)) { Serial.println("Ошибка!"); return; }\n  Serial.print("T: "); Serial.print(t); Serial.print(" C  H: "); Serial.print(h); Serial.println(" %");\n}`,
     tips:['Опрос не чаще 1 раза в 2 сек.','DHT22 или BME280 точнее.','Проверьте резистор 10 кОм.']
   },
   { id:'servo', title:'Управление сервоприводом', level:'Новичок', category:'Моторы', time:'20 минут', icon:'motor',
@@ -469,16 +350,7 @@ void loop() {
       {t:'Загрузите',d:'Библиотека Servo входит в IDE.'},
       {t:'Проверьте',d:'Вал ходит от 0° до 180° и обратно.'}
     ],
-    code:`// Проект 7: Сервопривод
-#include <Servo.h>
-Servo myServo;
-
-void setup() { myServo.attach(9); }
-
-void loop() {
-  for (int a = 0; a <= 180; a++) { myServo.write(a); delay(15); }
-  for (int a = 180; a >= 0; a--) { myServo.write(a); delay(15); }
-}`,
+    code:`// Проект 7: Сервопривод\n#include <Servo.h>\nServo myServo;\n\nvoid setup() { myServo.attach(9); }\n\nvoid loop() {\n  for (int a = 0; a <= 180; a++) { myServo.write(a); delay(15); }\n  for (int a = 180; a >= 0; a--) { myServo.write(a); delay(15); }\n}`,
     tips:['Мощные сервы — от внешнего БП.','GND БП и Arduino соединить.','writeMicroseconds() для точности.']
   },
   { id:'buzzer', title:'Мелодия на пьезоизлучателе', level:'Новичок', category:'Звук', time:'25 минут', icon:'music',
@@ -490,31 +362,7 @@ void loop() {
       {t:'Загрузите',d:'Arduino сыграет Happy Birthday.'},
       {t:'Настройте темп',d:'tempo влияет на длительность.'}
     ],
-    code:`// Проект 8: Мелодия
-const int BUZZER = 8;
-#define NOTE_C4 262
-#define NOTE_D4 294
-#define NOTE_E4 330
-#define NOTE_F4 349
-#define NOTE_G4 392
-
-int melody[] = {NOTE_C4,NOTE_C4,NOTE_D4,NOTE_C4,NOTE_F4,NOTE_E4};
-int durations[] = {4,4,4,4,4,2};
-const int tempo = 120;
-
-void setup() { pinMode(BUZZER, OUTPUT); }
-
-void loop() {
-  int notes = sizeof(melody) / sizeof(melody[0]);
-  int wholenote = (60000 * 4) / tempo;
-  for (int i = 0; i < notes; i++) {
-    int nd = wholenote / durations[i];
-    tone(BUZZER, melody[i], nd * 0.9);
-    delay(nd);
-    noTone(BUZZER);
-  }
-  delay(3000);
-}`,
+    code:`// Проект 8: Мелодия\nconst int BUZZER = 8;\n#define NOTE_C4 262\n#define NOTE_D4 294\n#define NOTE_E4 330\n#define NOTE_F4 349\n#define NOTE_G4 392\n\nint melody[] = {NOTE_C4,NOTE_C4,NOTE_D4,NOTE_C4,NOTE_F4,NOTE_E4};\nint durations[] = {4,4,4,4,4,2};\nconst int tempo = 120;\n\nvoid setup() { pinMode(BUZZER, OUTPUT); }\n\nvoid loop() {\n  int notes = sizeof(melody) / sizeof(melody[0]);\n  int wholenote = (60000 * 4) / tempo;\n  for (int i = 0; i < notes; i++) {\n    int nd = wholenote / durations[i];\n    tone(BUZZER, melody[i], nd * 0.9);\n    delay(nd);\n    noTone(BUZZER);\n  }\n  delay(3000);\n}`,
     tips:['tone() работает на любом пине.','Конфликт с ШИМ на пинах 3 и 11.','Пассивный buzzer играет мелодии.']
   },
   { id:'photoresistor', title:'Автоматический ночник', level:'Средний', category:'Датчики', time:'30 минут', icon:'moon',
@@ -526,23 +374,7 @@ void loop() {
       {t:'Подключите LED',d:'Через 220 Ом на пин 9.'},
       {t:'Откалибруйте',d:'Посмотрите значения днём и ночью, впишите порог.'}
     ],
-    code:`// Проект 9: Ночник
-const int LDR_PIN = A0;
-const int LED_PIN = 9;
-const int THRESHOLD = 400;
-
-void setup() {
-  pinMode(LED_PIN, OUTPUT);
-  Serial.begin(9600);
-}
-
-void loop() {
-  int light = analogRead(LDR_PIN);
-  Serial.print("Свет: "); Serial.println(light);
-  if (light < THRESHOLD) analogWrite(LED_PIN, 255);
-  else analogWrite(LED_PIN, 0);
-  delay(100);
-}`,
+    code:`// Проект 9: Ночник\nconst int LDR_PIN = A0;\nconst int LED_PIN = 9;\nconst int THRESHOLD = 400;\n\nvoid setup() {\n  pinMode(LED_PIN, OUTPUT);\n  Serial.begin(9600);\n}\n\nvoid loop() {\n  int light = analogRead(LDR_PIN);\n  Serial.print("Свет: "); Serial.println(light);\n  if (light < THRESHOLD) analogWrite(LED_PIN, 255);\n  else analogWrite(LED_PIN, 0);\n  delay(100);\n}`,
     tips:['analogRead() от 0 до 1023.','Темнее — выше сопротивление.','Гистерезис уберёт дрожание.']
   },
   { id:'rgb-led', title:'RGB-светодиод: все цвета радуги', level:'Новичок', category:'Основы', time:'20 минут', icon:'rainbow',
@@ -554,26 +386,7 @@ void loop() {
       {t:'Загрузите',d:'LED переливается всеми цветами.'},
       {t:'Свой цвет',d:'setColor(r,g,b) со своими значениями.'}
     ],
-    code:`// Проект 10: RGB
-const int R = 9, G = 10, B = 11;
-
-void setup() {
-  pinMode(R, OUTPUT); pinMode(G, OUTPUT); pinMode(B, OUTPUT);
-}
-
-void setColor(int r, int g, int b) {
-  analogWrite(R, r); analogWrite(G, g); analogWrite(B, b);
-}
-
-void loop() {
-  setColor(255, 0, 0); delay(500);
-  setColor(0, 255, 0); delay(500);
-  setColor(0, 0, 255); delay(500);
-  setColor(255, 255, 0); delay(500);
-  setColor(0, 255, 255); delay(500);
-  setColor(255, 0, 255); delay(500);
-  setColor(255, 255, 255); delay(500);
-}`,
+    code:`// Проект 10: RGB\nconst int R = 9, G = 10, B = 11;\n\nvoid setup() {\n  pinMode(R, OUTPUT); pinMode(G, OUTPUT); pinMode(B, OUTPUT);\n}\n\nvoid setColor(int r, int g, int b) {\n  analogWrite(R, r); analogWrite(G, g); analogWrite(B, b);\n}\n\nvoid loop() {\n  setColor(255, 0, 0); delay(500);\n  setColor(0, 255, 0); delay(500);\n  setColor(0, 0, 255); delay(500);\n  setColor(255, 255, 0); delay(500);\n  setColor(0, 255, 255); delay(500);\n  setColor(255, 0, 255); delay(500);\n  setColor(255, 255, 255); delay(500);\n}`,
     tips:['Общий анод — логика инвертирована.','3 резистора обязательны.','Для лент WS2812 — FastLED.']
   },
   { id:'lcd1602', title:'Дисплей 1602 I2C', level:'Средний', category:'Дисплеи', time:'35 минут', icon:'monitor',
@@ -585,26 +398,7 @@ void loop() {
       {t:'Установите библиотеку',d:'«LiquidCrystal I2C» by Frank de Brabander.'},
       {t:'Узнайте адрес',d:'I2C Scanner. Обычно 0x27 или 0x3F.'}
     ],
-    code:`// Проект 11: LCD 1602 I2C
-#include <Wire.h>
-#include <LiquidCrystal_I2C.h>
-
-LiquidCrystal_I2C lcd(0x27, 16, 2);
-
-void setup() {
-  lcd.init();
-  lcd.backlight();
-  lcd.setCursor(0, 0); lcd.print("   ArduInfo    ");
-  lcd.setCursor(0, 1); lcd.print("  Привет, мир!  ");
-}
-
-void loop() {
-  lcd.setCursor(0, 1);
-  lcd.print("Uptime: ");
-  lcd.print(millis() / 1000);
-  lcd.print(" s   ");
-  delay(500);
-}`,
+    code:`// Проект 11: LCD 1602 I2C\n#include <Wire.h>\n#include <LiquidCrystal_I2C.h>\n\nLiquidCrystal_I2C lcd(0x27, 16, 2);\n\nvoid setup() {\n  lcd.init();\n  lcd.backlight();\n  lcd.setCursor(0, 0); lcd.print("   ArduInfo    ");\n  lcd.setCursor(0, 1); lcd.print("  Привет, мир!  ");\n}\n\nvoid loop() {\n  lcd.setCursor(0, 1);\n  lcd.print("Uptime: ");\n  lcd.print(millis() / 1000);\n  lcd.print(" s   ");\n  delay(500);\n}`,
     tips:['Пустой экран — крутите контраст.','setCursor(столбец, строка).','Пробелы стирают старые символы.']
   },
   { id:'ir-remote', title:'Управление ИК-пультом', level:'Средний', category:'Датчики', time:'30 минут', icon:'remote',
@@ -616,30 +410,11 @@ void loop() {
       {t:'Установите библиотеку',d:'«IRremote» by Armin Joachimsmeyer.'},
       {t:'Считайте коды',d:'Нажимайте кнопки, записывайте коды.'}
     ],
-    code:`// Проект 12: ИК-пульт
-#include <IRremote.hpp>
-const int IR_PIN = 2;
-
-void setup() {
-  Serial.begin(9600);
-  IrReceiver.begin(IR_PIN, ENABLE_LED_FEEDBACK);
-}
-
-void loop() {
-  if (IrReceiver.decode()) {
-    Serial.print("Код: 0x");
-    Serial.println(IrReceiver.decodedIRData.decodedRawData, HEX);
-    IrReceiver.resume();
-  }
-}`,
+    code:`// Проект 12: ИК-пульт\n#include <IRremote.hpp>\nconst int IR_PIN = 2;\n\nvoid setup() {\n  Serial.begin(9600);\n  IrReceiver.begin(IR_PIN, ENABLE_LED_FEEDBACK);\n}\n\nvoid loop() {\n  if (IrReceiver.decode()) {\n    Serial.print("Код: 0x");\n    Serial.println(IrReceiver.decodedIRData.decodedRawData, HEX);\n    IrReceiver.resume();\n  }\n}`,
     tips:['Коды разных пультов отличаются.','Без препятствий до пульта.','Солнце содержит ИК и мешает.']
   }
 ];
 const CATEGORIES = ['Все','Основы','Датчики','Моторы','Звук','Дисплеи'];
-
-/* =========================================================
-   ПОДСВЕТКА СИНТАКСИСА
-   ========================================================= */
 const HL_KEYWORDS = ['void','int','long','float','double','char','bool','boolean','byte','word','unsigned','signed','const','static','volatile','if','else','for','while','do','switch','case','default','break','continue','return','struct','class','new','delete','sizeof','true','false','HIGH','LOW','INPUT','OUTPUT','INPUT_PULLUP','LED_BUILTIN','String'];
 const HL_FUNCS = ['pinMode','digitalWrite','digitalRead','analogRead','analogWrite','delay','delayMicroseconds','millis','micros','map','constrain','tone','noTone','pulseIn','random','randomSeed','Serial','setup','loop','begin','print','println','write','read','available','isnan','min','max','abs','pow','sqrt','myServo','attach','setCursor','init','backlight','lcd','dht','IrReceiver','decode','resume','setColor'];
 
@@ -670,9 +445,6 @@ function renderCode(code, name){
   return '<div class="code-wrap"><div class="code-head"><span>'+(name||'sketch.ino')+'</span><button class="copy-btn" data-copy>Копировать</button></div><pre><code>'+highlight(code.trim())+'</code></pre></div>';
 }
 
-/* =========================================================
-   РОУТЕР
-   ========================================================= */
 const app = document.getElementById('app');
 
 function navigate(){
@@ -713,9 +485,6 @@ function projectCard(p){
     '</div></a></article>';
 }
 
-/* =========================================================
-   СТРАНИЦЫ
-   ========================================================= */
 function renderHome(){
   const featured = ['blink','button-led','ultrasonic','dht11','servo','lcd1602']
     .map(id => PROJECTS.find(p => p.id === id)).filter(Boolean);
@@ -759,10 +528,10 @@ function renderHome(){
     <div class="container">
       <div class="section-head"><h2>Быстрые инструменты</h2><p>То, что нужно каждый день</p></div>
       <div class="grid grid-4">
-        <article class="card"><a class="card-link" href="#/resistor"><div class="card-icon">'+icon('ruler',24)+'</div><h3>Калькулятор резисторов</h3><p>Цветовая маркировка 4, 5 и 6 полос — туда и обратно.</p><div class="card-tags"><span class="badge badge-accent">Хит</span></div></a></article>
-        <article class="card"><a class="card-link" href="#/tools"><div class="card-icon">'+icon('bulb',24)+'</div><h3>Резистор для LED</h3><p>Подберём номинал и мощность.</p><div class="card-tags"><span class="badge">Калькулятор</span></div></a></article>
-        <article class="card"><a class="card-link" href="#/tools"><div class="card-icon">'+icon('bolt',24)+'</div><h3>Закон Ома</h3><p>Заполните 2 поля — остальное посчитается.</p><div class="card-tags"><span class="badge">Калькулятор</span></div></a></article>
-        <article class="card"><a class="card-link" href="#/tools"><div class="card-icon">'+icon('chart',24)+'</div><h3>Пересчёт АЦП</h3><p>Из analogRead() в вольты.</p><div class="card-tags"><span class="badge">Калькулятор</span></div></a></article>
+        <article class="card"><a class="card-link" href="#/resistor"><div class="card-icon">${icon('ruler',24)}</div><h3>Калькулятор резисторов</h3><p>Цветовая маркировка 4, 5 и 6 полос — туда и обратно.</p><div class="card-tags"><span class="badge badge-accent">Хит</span></div></a></article>
+        <article class="card"><a class="card-link" href="#/tools"><div class="card-icon">${icon('bulb',24)}</div><h3>Резистор для LED</h3><p>Подберём номинал и мощность.</p><div class="card-tags"><span class="badge">Калькулятор</span></div></a></article>
+        <article class="card"><a class="card-link" href="#/tools"><div class="card-icon">${icon('bolt',24)}</div><h3>Закон Ома</h3><p>Заполните 2 поля — остальное посчитается.</p><div class="card-tags"><span class="badge">Калькулятор</span></div></a></article>
+        <article class="card"><a class="card-link" href="#/tools"><div class="card-icon">${icon('chart',24)}</div><h3>Пересчёт АЦП</h3><p>Из analogRead() в вольты.</p><div class="card-tags"><span class="badge">Калькулятор</span></div></a></article>
       </div>
     </div>
   </section>
@@ -779,9 +548,9 @@ function renderHome(){
     <div class="container">
       <div class="section-head center"><h2>Почему ArduInfo</h2></div>
       <div class="grid grid-3">
-        <div class="card"><div class="card-icon">'+icon('code',24)+'</div><h3>Понятный код</h3><p>Каждая строка прокомментирована на русском.</p></div>
-        <div class="card"><div class="card-icon">'+icon('plug',24)+'</div><h3>Схемы подключения</h3><p>Какой провод куда и почему именно так.</p></div>
-        <div class="card"><div class="card-icon">'+icon('calculator',24)+'</div><h3>Живые калькуляторы</h3><p>Считайте прямо в браузере.</p></div>
+        <div class="card"><div class="card-icon">${icon('code',24)}</div><h3>Понятный код</h3><p>Каждая строка прокомментирована на русском.</p></div>
+        <div class="card"><div class="card-icon">${icon('plug',24)}</div><h3>Схемы подключения</h3><p>Какой провод куда и почему именно так.</p></div>
+        <div class="card"><div class="card-icon">${icon('calculator',24)}</div><h3>Живые калькуляторы</h3><p>Считайте прямо в браузере.</p></div>
       </div>
     </div>
   </section>
@@ -797,7 +566,6 @@ function renderHome(){
   `;
   bindCopyButtons();
 }
-
 function renderProjects(){
   app.innerHTML = `
   <section class="section">
@@ -893,9 +661,6 @@ function renderProject(id){
   bindCopyButtons();
 }
 
-/* =========================================================
-   РЕЗИСТОРЫ
-   ========================================================= */
 const COLORS = [
   { name:'Чёрный', hex:'#1a1a1a', digit:0, mult:1, tol:null, temp:250 },
   { name:'Коричневый', hex:'#6b3f1d', digit:1, mult:10, tol:1, temp:100 },
@@ -1088,8 +853,6 @@ function renderResistor(){
     const target = amount * unit;
     let best = null;
 
-    // Полный перебор E24 по декадам. Так не ломаются значения меньше 10 Ом,
-    // дробные сопротивления и значения от нескольких Ом до сотен МОм.
     for(let exponent = -2; exponent <= 9; exponent++){
       for(const nominal of E24){
         const candidate = nominal * Math.pow(10, exponent);
@@ -1136,9 +899,6 @@ function renderResistor(){
   setupBands(4);
 }
 
-/* =========================================================
-   ИНСТРУМЕНТЫ
-   ========================================================= */
 function renderTools(){
   app.innerHTML = `
   <section class="section">
@@ -1303,7 +1063,7 @@ function renderTools(){
   ['batCap','batCur'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('batBtn').click();}));
   ['adcRaw','adcVref'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('adcBtn').click();}));
 
-    document.getElementById('adcBtn').addEventListener('click', () => {
+  document.getElementById('adcBtn').addEventListener('click', () => {
     const raw = num('adcRaw'), vref = num('adcVref'), bits = num('adcBits');
     if(!Number.isInteger(raw) || !Number.isFinite(vref) || vref <= 0 || ![10,12,16].includes(bits)){
       put('adcResult','Введите корректные значения'); return;
@@ -1315,9 +1075,6 @@ function renderTools(){
   });
 }
 
-/* =========================================================
-   ОСНОВЫ
-   ========================================================= */
 function renderBasics(){
   app.innerHTML = `
   <section class="section">
@@ -1351,18 +1108,7 @@ function renderBasics(){
       </ul>
 
       <h2 style="margin-top:32px">Структура скетча</h2>
-      ${renderCode(`void setup() {
-  // Выполняется ОДИН РАЗ
-  pinMode(13, OUTPUT);
-}
-
-void loop() {
-  // Выполняется БЕСКОНЕЧНО
-  digitalWrite(13, HIGH);
-  delay(500);
-  digitalWrite(13, LOW);
-  delay(500);
-}`, 'структура.ino')}
+      ${renderCode("void setup() {\n  // Выполняется ОДИН РАЗ\n  pinMode(13, OUTPUT);\n}\n\nvoid loop() {\n  // Выполняется БЕСКОНЕЧНО\n  digitalWrite(13, HIGH);\n  delay(500);\n  digitalWrite(13, LOW);\n  delay(500);\n}", 'структура.ino')}
 
       <div class="note danger">
         <b>Правила безопасности</b>
@@ -1391,8 +1137,8 @@ function renderAbout(){
 
       <h2 style="margin-top:30px">Что здесь есть</h2>
       <div class="grid grid-2" style="margin-top:16px">
-        <div class="card"><div class="card-icon">'+icon('package',24)+'</div><h3>Проекты</h3><p>Готовые скетчи с пошаговой сборкой.</p></div>
-        <div class="card"><div class="card-icon">'+icon('calculator',24)+'</div><h3>Калькуляторы</h3><p>Резисторы, закон Ома, LED, АЦП и другое.</p></div>
+        <div class="card"><div class="card-icon">${icon('package',24)}</div><h3>Проекты</h3><p>Готовые скетчи с пошаговой сборкой.</p></div>
+        <div class="card"><div class="card-icon">${icon('calculator',24)}</div><h3>Калькуляторы</h3><p>Резисторы, закон Ома, LED, АЦП и другое.</p></div>
       </div>
 
       <div class="note warn" style="margin-top:20px">
@@ -1418,9 +1164,6 @@ function render404(){
   </section>`;
 }
 
-/* =========================================================
-   ВСПОМОГАТЕЛЬНОЕ
-   ========================================================= */
 function showToast(message){
   let toast=document.getElementById('siteToast');
   if(!toast){toast=document.createElement('div');toast.id='siteToast';toast.className='toast';document.body.appendChild(toast);}
@@ -1452,16 +1195,12 @@ function bindCopyButtons(){
   });
 }
 
-/* =========================================================
-   ТЕМА И МЕНЮ
-   ========================================================= */
 (function initTheme(){
   let saved = null;
   try { saved = localStorage.getItem('arduinfo-theme'); } catch(e) {}
   if(!saved) saved = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   document.documentElement.setAttribute('data-theme', saved);
   document.getElementById('themeToggle').innerHTML = icon(saved === 'dark' ? 'sun' : 'moon', 20);
-  document.getElementById('themeToggle').setAttribute('aria-label', saved === 'dark' ? 'Включить светлую тему' : 'Включить тёмную тему');
 })();
 
 document.getElementById('themeToggle').addEventListener('click', () => {
@@ -1469,7 +1208,6 @@ document.getElementById('themeToggle').addEventListener('click', () => {
   const next = cur === 'dark' ? 'light' : 'dark';
   document.documentElement.setAttribute('data-theme', next);
   document.getElementById('themeToggle').innerHTML = icon(next === 'dark' ? 'sun' : 'moon', 20);
-  document.getElementById('themeToggle').setAttribute('aria-label', next === 'dark' ? 'Включить светлую тему' : 'Включить тёмную тему');
   try { localStorage.setItem('arduinfo-theme', next); } catch(e) {}
 });
 
@@ -1491,7 +1229,6 @@ document.addEventListener('click', (e) => {
   if(nav.classList.contains('open') && !nav.contains(e.target) && e.target.id!=='menuBtn'){ nav.classList.remove('open'); document.getElementById('menuBtn').setAttribute('aria-expanded','false'); }
 });
 
-/* Наверх */
 const toTop = document.createElement('button');
 toTop.className = 'to-top';
 toTop.innerHTML = '↑';
@@ -1501,23 +1238,16 @@ window.addEventListener('scroll', () => toTop.classList.toggle('show', window.sc
 
 document.getElementById('year').textContent = new Date().getFullYear();
 
-/* Запуск */
 window.addEventListener('hashchange', navigate);
 navigate();
 </script>
 
-<!-- =========================================================
-     МИССИЯ ARDUINFO: возврат в Telegram-бота
-     ========================================================= -->
 <script>
 (function(){
   try {
-    // uid должен быть именно Telegram user ID, а не произвольной строкой.
     const params = new URLSearchParams(location.search);
     const uid = params.get('uid');
     if (!uid || !/^\d{1,20}$/.test(uid)) return;
-
-    // Не создаём второй таймер при повторной инициализации/обновлении страницы.
     if (document.getElementById('missionBanner')) return;
 
     const banner = document.createElement('div');
@@ -1547,7 +1277,6 @@ navigate();
   }
 })();
 </script>
-<!-- ===== AI-помощник ===== -->
 <style>
 #aiToggle{position:fixed;bottom:24px;left:24px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#00979D,#00c2c9);color:#fff;font-size:1.35rem;display:grid;place-items:center;box-shadow:0 10px 28px rgba(0,151,157,.42);cursor:pointer;z-index:96;transition:transform .2s;border:3px solid color-mix(in srgb,var(--surface) 75%,transparent);font-family:inherit}
 #aiToggle:hover{transform:scale(1.08)}
@@ -1589,9 +1318,7 @@ navigate();
 <script>document.getElementById('aiTitle').insertAdjacentHTML('afterbegin', icon('robot', 18));</script>
 <script>
 (function(){
-  // ⚠️ ЗАМЕНИ НА СВОЙ URL ИЗ ШАГА 1
   const AI_URL = 'https://arduinfo-ai.n03182243.workers.dev';
-
   const toggle = document.getElementById('aiToggle');
   const win = document.getElementById('aiWindow');
   const close = document.getElementById('aiClose');
@@ -1600,7 +1327,6 @@ navigate();
   const send = document.getElementById('aiSend');
   let busy = false;
 
-  // Пульсация пока пользователь ни разу не открыл
   if (!localStorage.getItem('arduinfo-ai-opened')) {
     toggle.classList.add('pulse');
   }
