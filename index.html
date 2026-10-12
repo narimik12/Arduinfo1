@@ -12,6 +12,7 @@
 
 <!-- GoatCounter — счётчик посетителей -->
 <script data-goatcounter="https://narim.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<script src="icons.js"></script>
 
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -220,12 +221,16 @@ body{background:radial-gradient(1200px 600px at 50% -300px,var(--accent-soft),tr
       <a href="#/about">О сайте</a>
     </nav>
     <div class="header-actions">
-      <button class="icon-btn" id="themeToggle" type="button" aria-label="Переключить тему" title="Переключить тему">🌙</button>
-      <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="Открыть меню" aria-expanded="false">☰</button>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Переключить тему" title="Переключить тему"></button>
+      <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="Открыть меню" aria-expanded="false"></button>
     </div>
   </div>
 </header>
-
+<script>
+document.getElementById('themeToggle').innerHTML = icon('moon', 20);
+document.getElementById('menuBtn').innerHTML = icon('menu', 20);
+</script>
+  
 <main id="app" tabindex="-1"></main>
 
 <footer class="site-footer">
@@ -272,7 +277,7 @@ body{background:radial-gradient(1200px 600px at 50% -300px,var(--accent-soft),tr
    ДАННЫЕ ПРОЕКТОВ
    ========================================================= */
 const PROJECTS = [
-  { id:'blink', title:'Мигающий светодиод (Blink)', level:'Новичок', category:'Основы', time:'10 минут', icon:'💡',
+  { id:'blink', title:'Мигающий светодиод (Blink)', level:'Новичок', category:'Основы', time:'10 минут', icon:'bulb',
     short:'Самый первый проект каждого ардуинщика: заставляем встроенный светодиод мигать.',
     description:'Проект Blink — классика. Он не требует дополнительных деталей, кроме платы Arduino и USB-кабеля. Вы научитесь пользоваться pinMode(), digitalWrite() и delay().',
     components:['Плата Arduino Uno (или Nano)','USB-кабель','Компьютер с Arduino IDE'],
@@ -296,7 +301,7 @@ void loop() {
 }`,
     tips:['Если не мигает — проверьте COM-порт.','LED_BUILTIN для Uno равен 13.','Измените delay() и посмотрите, что получится.']
   },
-  { id:'button-led', title:'Кнопка управляет светодиодом', level:'Новичок', category:'Основы', time:'20 минут', icon:'🔘',
+  { id:'button-led', title:'Кнопка управляет светодиодом', level:'Новичок', category:'Основы', time:'20 минут', icon:'button',
     short:'Учимся читать состояние кнопки и управлять светодиодом.',
     description:'Первый проект с внешними компонентами. Вы узнаете, что такое INPUT_PULLUP и как бороться с дребезгом контактов.',
     components:['Arduino Uno','Тактовая кнопка','Светодиод 5 мм','Резистор 220 Ом','Провода','Макетная плата'],
@@ -327,7 +332,7 @@ void loop() {
 }`,
     tips:['INPUT_PULLUP — внешний резистор не нужен.','Резистор 220 Ом обязателен для LED.','delay(20) защищает от дребезга.']
   },
-  { id:'traffic-light', title:'Светофор на трёх светодиодах', level:'Новичок', category:'Основы', time:'25 минут', icon:'🚦',
+  { id:'traffic-light', title:'Светофор на трёх светодиодах', level:'Новичок', category:'Основы', time:'25 минут', icon:'traffic',
     short:'Собираем мини-светофор и учимся работать с массивами.',
     description:'Отличный проект для закрепления работы с несколькими выходами.',
     components:['Arduino Uno','3 светодиода','3 резистора 220 Ом','Провода'],
@@ -361,7 +366,7 @@ void loop() {
 }`,
     tips:['Функция allOff() убирает дублирование.','Добавьте кнопку для пешеходов.','Замените delay() на millis() для реалистичности.']
   },
-  { id:'fade-led', title:'Плавное затухание светодиода (PWM)', level:'Новичок', category:'Основы', time:'15 минут', icon:'🌗',
+  { id:'fade-led', title:'Плавное затухание светодиода (PWM)', level:'Новичок', category:'Основы', time:'15 минут', icon:'fade',
     short:'Используем ШИМ, чтобы плавно менять яркость светодиода.',
     description:'ШИМ работает на пинах 3, 5, 6, 9, 10, 11 (помечены ~). analogWrite() принимает значения от 0 до 255.',
     components:['Arduino Uno','Светодиод','Резистор 220 Ом','Провода'],
@@ -389,7 +394,7 @@ void loop() {
 }`,
     tips:['analogWrite() только на пинах с ~.','ШИМ-частота на Uno ~490 Гц.','Тот же приём для моторов и ламп.']
   },
-  { id:'ultrasonic', title:'Дальномер на HC-SR04', level:'Средний', category:'Датчики', time:'35 минут', icon:'📡',
+  { id:'ultrasonic', title:'Дальномер на HC-SR04', level:'Средний', category:'Датчики', time:'35 минут', icon:'radar',
     short:'Измеряем расстояние ультразвуком.',
     description:'HC-SR04 посылает импульс и измеряет время до эха. Скорость звука 343 м/с.',
     components:['Arduino Uno','HC-SR04','Провода'],
@@ -426,7 +431,7 @@ void loop() {
 }`,
     tips:['Работает от 2 см до 400 см.','Мягкие поверхности плохо отражают.','На ECHO — не больше 5 В.']
   },
-  { id:'dht11', title:'Термометр и гигрометр на DHT11', level:'Средний', category:'Датчики', time:'30 минут', icon:'🌡️',
+  { id:'dht11', title:'Термометр и гигрометр на DHT11', level:'Средний', category:'Датчики', time:'30 минут', icon:'thermometer',
     short:'Измеряем температуру и влажность.',
     description:'DHT11 — дешёвый датчик. Точность ±2 °C и ±5 % влажности.',
     components:['Arduino Uno','DHT11','Резистор 10 кОм','Провода'],
@@ -455,7 +460,7 @@ void loop() {
 }`,
     tips:['Опрос не чаще 1 раза в 2 сек.','DHT22 или BME280 точнее.','Проверьте резистор 10 кОм.']
   },
-  { id:'servo', title:'Управление сервоприводом', level:'Новичок', category:'Моторы', time:'20 минут', icon:'⚙️',
+  { id:'servo', title:'Управление сервоприводом', level:'Новичок', category:'Моторы', time:'20 минут', icon:'motor',
     short:'Крутим сервопривод на нужный угол.',
     description:'Сервоприводы поворачиваются на угол 0–180°. Библиотека Servo упрощает управление.',
     components:['Arduino Uno','Сервопривод SG90','Провода'],
@@ -476,7 +481,7 @@ void loop() {
 }`,
     tips:['Мощные сервы — от внешнего БП.','GND БП и Arduino соединить.','writeMicroseconds() для точности.']
   },
-  { id:'buzzer', title:'Мелодия на пьезоизлучателе', level:'Новичок', category:'Звук', time:'25 минут', icon:'🎵',
+  { id:'buzzer', title:'Мелодия на пьезоизлучателе', level:'Новичок', category:'Звук', time:'25 минут', icon:'music',
     short:'Играем мелодию функцией tone().',
     description:'Пьезо превращает колебания в звук. tone() генерирует частоту.',
     components:['Arduino Uno','Пьезоизлучатель','Провода'],
@@ -512,7 +517,7 @@ void loop() {
 }`,
     tips:['tone() работает на любом пине.','Конфликт с ШИМ на пинах 3 и 11.','Пассивный buzzer играет мелодии.']
   },
-  { id:'photoresistor', title:'Автоматический ночник', level:'Средний', category:'Датчики', time:'30 минут', icon:'🌙',
+  { id:'photoresistor', title:'Автоматический ночник', level:'Средний', category:'Датчики', time:'30 минут', icon:'moon',
     short:'Светодиод включается, когда темно.',
     description:'Фоторезистор + резистор = делитель напряжения. Читаем аналоговым входом.',
     components:['Arduino Uno','Фоторезистор GL5528','Резистор 10 кОм','Светодиод','Резистор 220 Ом'],
@@ -540,7 +545,7 @@ void loop() {
 }`,
     tips:['analogRead() от 0 до 1023.','Темнее — выше сопротивление.','Гистерезис уберёт дрожание.']
   },
-  { id:'rgb-led', title:'RGB-светодиод: все цвета радуги', level:'Новичок', category:'Основы', time:'20 минут', icon:'🌈',
+  { id:'rgb-led', title:'RGB-светодиод: все цвета радуги', level:'Новичок', category:'Основы', time:'20 минут', icon:'rainbow',
     short:'Смешиваем 3 канала ШИМ — любой цвет.',
     description:'Три кристалла: R, G, B. Меняя яркость каждого — 16,7 млн оттенков.',
     components:['Arduino Uno','RGB-светодиод','3 резистора 220 Ом'],
@@ -571,7 +576,7 @@ void loop() {
 }`,
     tips:['Общий анод — логика инвертирована.','3 резистора обязательны.','Для лент WS2812 — FastLED.']
   },
-  { id:'lcd1602', title:'Дисплей 1602 I2C', level:'Средний', category:'Дисплеи', time:'35 минут', icon:'🖥️',
+  { id:'lcd1602', title:'Дисплей 1602 I2C', level:'Средний', category:'Дисплеи', time:'35 минут', icon:'monitor',
     short:'Выводим текст на LCD через 2 линии I2C.',
     description:'Модуль I2C — всего 4 провода. Библиотека LiquidCrystal_I2C упрощает вывод.',
     components:['Arduino Uno','LCD 1602 I2C','4 провода'],
@@ -602,7 +607,7 @@ void loop() {
 }`,
     tips:['Пустой экран — крутите контраст.','setCursor(столбец, строка).','Пробелы стирают старые символы.']
   },
-  { id:'ir-remote', title:'Управление ИК-пультом', level:'Средний', category:'Датчики', time:'30 минут', icon:'📺',
+  { id:'ir-remote', title:'Управление ИК-пультом', level:'Средний', category:'Датчики', time:'30 минут', icon:'remote',
     short:'Принимаем сигналы от бытового пульта.',
     description:'ИК-приёмник TSOP1838 декодирует сигналы. Библиотека IRremote получает код кнопки.',
     components:['Arduino Uno','ИК-приёмник TSOP1838','Пульт'],
@@ -698,7 +703,7 @@ function navigate(){
 
 function projectCard(p){
   return '<article class="card fade-up"><a class="card-link" href="#/project/'+p.id+'">'+
-    '<div class="card-icon">'+p.icon+'</div>'+
+    '<div class="card-icon">'+icon(p.icon, 26)+'</div>'+
     '<h3>'+p.title+'</h3>'+
     '<p>'+p.short+'</p>'+
     '<div class="card-tags">'+
@@ -754,10 +759,10 @@ function renderHome(){
     <div class="container">
       <div class="section-head"><h2>Быстрые инструменты</h2><p>То, что нужно каждый день</p></div>
       <div class="grid grid-4">
-        <article class="card"><a class="card-link" href="#/resistor"><div class="card-icon">🎨</div><h3>Калькулятор резисторов</h3><p>Цветовая маркировка 4, 5 и 6 полос — туда и обратно.</p><div class="card-tags"><span class="badge badge-accent">Хит</span></div></a></article>
-        <article class="card"><a class="card-link" href="#/tools"><div class="card-icon">💡</div><h3>Резистор для LED</h3><p>Подберём номинал и мощность.</p><div class="card-tags"><span class="badge">Калькулятор</span></div></a></article>
-        <article class="card"><a class="card-link" href="#/tools"><div class="card-icon">⚡</div><h3>Закон Ома</h3><p>Заполните 2 поля — остальное посчитается.</p><div class="card-tags"><span class="badge">Калькулятор</span></div></a></article>
-        <article class="card"><a class="card-link" href="#/tools"><div class="card-icon">📊</div><h3>Пересчёт АЦП</h3><p>Из analogRead() в вольты.</p><div class="card-tags"><span class="badge">Калькулятор</span></div></a></article>
+        <article class="card"><a class="card-link" href="#/resistor"><div class="card-icon">'+icon('ruler',24)+'</div><h3>Калькулятор резисторов</h3><p>Цветовая маркировка 4, 5 и 6 полос — туда и обратно.</p><div class="card-tags"><span class="badge badge-accent">Хит</span></div></a></article>
+        <article class="card"><a class="card-link" href="#/tools"><div class="card-icon">'+icon('bulb',24)+'</div><h3>Резистор для LED</h3><p>Подберём номинал и мощность.</p><div class="card-tags"><span class="badge">Калькулятор</span></div></a></article>
+        <article class="card"><a class="card-link" href="#/tools"><div class="card-icon">'+icon('bolt',24)+'</div><h3>Закон Ома</h3><p>Заполните 2 поля — остальное посчитается.</p><div class="card-tags"><span class="badge">Калькулятор</span></div></a></article>
+        <article class="card"><a class="card-link" href="#/tools"><div class="card-icon">'+icon('chart',24)+'</div><h3>Пересчёт АЦП</h3><p>Из analogRead() в вольты.</p><div class="card-tags"><span class="badge">Калькулятор</span></div></a></article>
       </div>
     </div>
   </section>
@@ -774,9 +779,9 @@ function renderHome(){
     <div class="container">
       <div class="section-head center"><h2>Почему ArduInfo</h2></div>
       <div class="grid grid-3">
-        <div class="card"><div class="card-icon">📝</div><h3>Понятный код</h3><p>Каждая строка прокомментирована на русском.</p></div>
-        <div class="card"><div class="card-icon">🔌</div><h3>Схемы подключения</h3><p>Какой провод куда и почему именно так.</p></div>
-        <div class="card"><div class="card-icon">🧮</div><h3>Живые калькуляторы</h3><p>Считайте прямо в браузере.</p></div>
+        <div class="card"><div class="card-icon">'+icon('code',24)+'</div><h3>Понятный код</h3><p>Каждая строка прокомментирована на русском.</p></div>
+        <div class="card"><div class="card-icon">'+icon('plug',24)+'</div><h3>Схемы подключения</h3><p>Какой провод куда и почему именно так.</p></div>
+        <div class="card"><div class="card-icon">'+icon('calculator',24)+'</div><h3>Живые калькуляторы</h3><p>Считайте прямо в браузере.</p></div>
       </div>
     </div>
   </section>
@@ -861,7 +866,7 @@ function renderProject(id){
   <section class="section">
     <div class="container" style="max-width:900px">
       <div class="breadcrumbs"><a href="#/">Главная</a><span>/</span><a href="#/projects">Проекты</a><span>/</span><span>${p.title}</span></div>
-      <div style="font-size:2.4rem;margin-bottom:10px">${p.icon}</div>
+      <div style="margin-bottom:14px;color:var(--accent)">${icon(p.icon, 48)}</div>
       <h1 style="margin-bottom:14px">${p.title}</h1>
       <div class="card-tags">
         <span class="badge badge-accent">${p.category}</span>
@@ -1386,8 +1391,8 @@ function renderAbout(){
 
       <h2 style="margin-top:30px">Что здесь есть</h2>
       <div class="grid grid-2" style="margin-top:16px">
-        <div class="card"><div class="card-icon">📦</div><h3>Проекты</h3><p>Готовые скетчи с пошаговой сборкой.</p></div>
-        <div class="card"><div class="card-icon">🧮</div><h3>Калькуляторы</h3><p>Резисторы, закон Ома, LED, АЦП и другое.</p></div>
+        <div class="card"><div class="card-icon">'+icon('package',24)+'</div><h3>Проекты</h3><p>Готовые скетчи с пошаговой сборкой.</p></div>
+        <div class="card"><div class="card-icon">'+icon('calculator',24)+'</div><h3>Калькуляторы</h3><p>Резисторы, закон Ома, LED, АЦП и другое.</p></div>
       </div>
 
       <div class="note warn" style="margin-top:20px">
@@ -1455,7 +1460,7 @@ function bindCopyButtons(){
   try { saved = localStorage.getItem('arduinfo-theme'); } catch(e) {}
   if(!saved) saved = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   document.documentElement.setAttribute('data-theme', saved);
-  document.getElementById('themeToggle').textContent = saved === 'dark' ? '☀️' : '🌙';
+  document.getElementById('themeToggle').innerHTML = icon(saved === 'dark' ? 'sun' : 'moon', 20);
   document.getElementById('themeToggle').setAttribute('aria-label', saved === 'dark' ? 'Включить светлую тему' : 'Включить тёмную тему');
 })();
 
@@ -1463,7 +1468,7 @@ document.getElementById('themeToggle').addEventListener('click', () => {
   const cur = document.documentElement.getAttribute('data-theme');
   const next = cur === 'dark' ? 'light' : 'dark';
   document.documentElement.setAttribute('data-theme', next);
-  document.getElementById('themeToggle').textContent = next === 'dark' ? '☀️' : '🌙';
+  document.getElementById('themeToggle').innerHTML = icon(next === 'dark' ? 'sun' : 'moon', 20);
   document.getElementById('themeToggle').setAttribute('aria-label', next === 'dark' ? 'Включить светлую тему' : 'Включить тёмную тему');
   try { localStorage.setItem('arduinfo-theme', next); } catch(e) {}
 });
@@ -1565,11 +1570,12 @@ navigate();
 @media(max-width:500px){#aiWindow{width:calc(100% - 32px);left:16px;bottom:88px}#aiToggle{left:16px;bottom:16px;width:52px;height:52px}}
 </style>
 
-<button id="aiToggle" type="button" aria-label="Спросить ИИ" title="Спросить ИИ">🤖</button>
+<button id="aiToggle" type="button" aria-label="Спросить ИИ" title="Спросить ИИ"></button>
+<script>document.getElementById('aiToggle').innerHTML = icon('robot', 26);</script>
 
 <div id="aiWindow" role="dialog" aria-label="AI-помощник">
   <div id="aiHead">
-    <span>🤖 Помощник Arduino</span>
+    <span id="aiTitle" style="display:inline-flex;align-items:center;gap:8px">Помощник Arduino</span>
     <button id="aiClose" type="button" aria-label="Закрыть">✕</button>
   </div>
   <div id="aiBody">
@@ -1580,7 +1586,7 @@ navigate();
     <button id="aiSend" type="button">→</button>
   </div>
 </div>
-
+<script>document.getElementById('aiTitle').insertAdjacentHTML('afterbegin', icon('robot', 18));</script>
 <script>
 (function(){
   // ⚠️ ЗАМЕНИ НА СВОЙ URL ИЗ ШАГА 1
