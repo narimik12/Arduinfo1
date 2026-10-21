@@ -1,0 +1,1643 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ArduInfo — проекты, калькуляторы, справочники</title>
+<meta name="description" content="Проекты на Arduino для новичков, калькулятор резисторов, закон Ома и другие инструменты.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/favicon.svg">
+<meta name="theme-color" content="#00979D">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script data-goatcounter="https://narim.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<script src="icons.js"></script>
+
+<style>
+/* =========================================================
+   БАЗОВЫЕ ПЕРЕМЕННЫЕ (ТВОИ ЦВЕТА)
+   ========================================================= */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --accent:#00979D;--accent-dark:#00767b;--accent-light:#00c2c9;--accent-soft:rgba(0,151,157,.08);
+  --bg:#f4f8fa;--surface:#ffffff;--surface-2:#f0f4f7;--text:#12212b;--muted:#5d7280;--border:#dfe8ed;
+  --code-bg:#0f1b23;--code-text:#d6e4ee;--warn:#e08a1e;--danger:#d9483b;--ok:#2e9e5b;
+  --radius:12px;--radius-sm:8px;
+  --shadow:0 2px 4px rgba(16,42,55,.03),0 10px 30px rgba(16,42,55,.05);
+  --shadow-lg:0 15px 50px rgba(16,42,55,.1);
+  --font:'Inter',system-ui,-apple-system,sans-serif;
+  --mono:'JetBrains Mono','Fira Code',monospace;
+  --max:1200px;
+}
+
+html[data-theme="dark"]{
+  --accent:#00c2c9;--accent-dark:#00979D;--accent-soft:rgba(0,194,201,.10);
+  --bg:#0c1218;--surface:#141c24;--surface-2:#1b252f;--text:#e3edf3;--muted:#8ba0b0;--border:#243240;
+  --shadow:0 2px 4px rgba(0,0,0,.3),0 10px 30px rgba(0,0,0,.3);
+  --shadow-lg:0 15px 50px rgba(0,0,0,.5);
+}
+
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font);background:var(--bg);color:var(--text);
+  line-height:1.65;font-size:16px;min-height:100vh;display:flex;flex-direction:column;
+  transition:background .25s,color .25s;
+}
+main{flex:1}
+a{color:var(--accent);text-decoration:none;transition:color .15s}
+a:hover{color:var(--accent-dark)}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;border:none;background:none}
+img{max-width:100%;display:block}
+
+.container{width:100%;max-width:var(--max);margin:0 auto;padding:0 24px}
+
+h1,h2,h3,h4{line-height:1.2;font-weight:800;letter-spacing:-0.02em;color:var(--text)}
+h1{font-size:clamp(2rem,4vw,3rem)}
+h2{font-size:clamp(1.4rem,2.5vw,1.8rem);margin-bottom:0.5em}
+h3{font-size:1.15rem;margin-bottom:0.5em}
+p{margin-bottom:1em;color:var(--muted)}
+.lead{font-size:1.1rem;color:var(--muted);line-height:1.7}
+
+/* --- УТИЛИТЫ --- */
+.flex-between{display:flex;justify-content:space-between;align-items:center}
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:.75rem;font-weight:700;padding:4px 10px;border-radius:6px;background:var(--surface-2);color:var(--muted);white-space:nowrap}
+.badge-accent{background:var(--accent-soft);color:var(--accent)}
+.badge-ok{background:rgba(46,158,91,.1);color:var(--ok)}
+
+/* =========================================================
+   ШАПКА (Sticky, Glassmorphism)
+   ========================================================= */
+.site-header{
+  position:sticky;top:0;z-index:100;
+  background:color-mix(in srgb, var(--surface) 85%, transparent);
+  backdrop-filter:saturate(180%) blur(12px);-webkit-backdrop-filter:saturate(180%) blur(12px);
+  border-bottom:1px solid var(--border);
+  transition:background .25s;
+}
+.header-inner{display:flex;align-items:center;gap:24px;height:72px}
+.logo{display:flex;align-items:center;gap:12px;font-weight:800;font-size:1.2rem;color:var(--text);letter-spacing:-.03em}
+.logo:hover{color:var(--text)}
+.logo-mark{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-light));color:#fff;display:grid;place-items:center;font-size:1.1rem;font-weight:900;box-shadow:0 4px 14px var(--accent-soft)}
+.logo-text strong{color:var(--accent)}
+
+.nav{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap}
+.nav a{color:var(--muted);font-weight:600;font-size:.95rem;padding:8px 14px;border-radius:8px;transition:all .15s}
+.nav a:hover{background:var(--surface-2);color:var(--text)}
+.nav a.active{background:var(--accent-soft);color:var(--accent)}
+
+.header-actions{display:flex;gap:8px;align-items:center;margin-left:16px}
+.icon-btn{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;background:var(--surface);border:1px solid var(--border);color:var(--muted);transition:all .15s}
+.icon-btn:hover{background:var(--surface-2);color:var(--text);border-color:var(--accent)}
+.menu-btn{display:none}
+
+@media(max-width:960px){
+  .nav{position:fixed;top:72px;left:0;right:0;background:var(--surface);border-bottom:1px solid var(--border);flex-direction:column;gap:0;padding:12px 24px 24px;transform:translateY(-150%);transition:transform .3s;box-shadow:var(--shadow-lg);margin-left:0}
+  .nav.open{transform:translateY(0)}
+  .nav a{padding:12px 16px;font-size:1rem}
+  .menu-btn{display:grid}
+}
+
+/* =========================================================
+   КНОПКИ (Возвращаем градиенты и скругления)
+   ========================================================= */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:12px 24px;border-radius:10px;font-weight:700;font-size:.95rem;
+  transition:transform .15s, box-shadow .15s, background .15s;
+  border:1px solid transparent;white-space:nowrap;
+}
+.btn:active{transform:scale(.98)}
+.btn-primary{
+  background:linear-gradient(135deg, var(--accent), var(--accent-dark));
+  color:#fff;
+  box-shadow:0 4px 15px var(--accent-soft);
+}
+.btn-primary:hover{
+  background:linear-gradient(135deg, var(--accent-dark), var(--accent));
+  color:#fff;
+  box-shadow:0 8px 25px var(--accent-soft);
+}
+.btn-ghost{
+  background:var(--surface);color:var(--text);border-color:var(--border);
+}
+.btn-ghost:hover{
+  border-color:var(--accent);color:var(--accent);background:var(--accent-soft);
+}
+
+/* =========================================================
+   ГЛАВНЫЙ ЭКРАН (Перекомпоновка: Асимметрия)
+   ========================================================= */
+.hero {
+  padding: 80px 0 60px;
+  background: radial-gradient(800px 400px at 100% 0%, var(--accent-soft), transparent 70%);
+  border-bottom: 1px solid var(--border);
+}
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 50/50 */
+  gap: 60px;
+  align-items: center;
+}
+
+/* Левая часть: Текст + Бейдж */
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 14px; border-radius: 30px;
+  background: var(--surface); border: 1px solid var(--border);
+  font-size: 0.85rem; font-weight: 600; color: var(--text);
+  box-shadow: var(--shadow); margin-bottom: 24px;
+}
+.hero h1 { margin-bottom: 20px; line-height: 1.1; }
+.hero h1 span { color: var(--accent); }
+.hero p { font-size: 1.15rem; margin-bottom: 32px; max-width: 45ch; }
+
+/* Статы в ряд, но с вертикальными линиями */
+.hero-stats {
+  display: flex; gap: 32px; margin-top: 40px; padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+.hero-stat { display: flex; flex-direction: column; gap: 4px; }
+.hero-stat b { font-size: 1.8rem; font-weight: 900; color: var(--text); line-height: 1; }
+.hero-stat span { font-size: 0.85rem; color: var(--muted); font-weight: 500; }
+
+/* Правая часть: Код (терминал) */
+.hero-art {
+  background: var(--code-bg);
+  border-radius: 16px;
+  box-shadow: var(--shadow-lg), 0 0 0 1px rgba(255,255,255,0.05);
+  overflow: hidden;
+  position: relative;
+  transform: perspective(1000px) rotateY(-5deg) rotateX(2deg);
+  transition: transform 0.4s;
+}
+.hero-art:hover { transform: perspective(1000px) rotateY(0deg) rotateX(0deg); }
+.hero-art-header {
+  display: flex; gap: 8px; padding: 14px 20px;
+  background: rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.hero-art-dot { width: 12px; height: 12px; border-radius: 50%; background: #333; }
+.hero-art-dot:nth-child(1) { background: #ff5f56; }
+.hero-art-dot:nth-child(2) { background: #ffbd2e; }
+.hero-art-dot:nth-child(3) { background: #27c93f; }
+.hero-art-body {
+  padding: 24px; font-family: var(--mono); font-size: 0.9rem; line-height: 1.7; color: var(--code-text);
+}
+
+@media(max-width: 900px) {
+  .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+  .hero-art { transform: none; }
+  .hero-stats { flex-wrap: wrap; gap: 20px; }
+}
+
+/* =========================================================
+   СЕКЦИИ И СЕТКИ (Перекомпоновка)
+   ========================================================= */
+.section { padding: 80px 0; }
+.section-head { margin-bottom: 40px; }
+.section-head h2 { font-size: 1.8rem; font-weight: 800; margin-bottom: 8px; }
+.section-head p { font-size: 1.05rem; color: var(--muted); max-width: 60ch; margin: 0; }
+
+/* --- Быстрые инструменты (Сдвиг сетки) --- */
+.tools-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 20px;
+}
+.tool-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+  padding: 24px; display: flex; flex-direction: column; gap: 16px;
+  transition: all 0.2s; box-shadow: var(--shadow);
+  position: relative; overflow: hidden;
+}
+.tool-card:hover {
+  transform: translateY(-4px); border-color: var(--accent); box-shadow: var(--shadow-lg);
+}
+.tool-card::before {
+  content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-light));
+  opacity: 0; transition: opacity 0.2s;
+}
+.tool-card:hover::before { opacity: 1; }
+.tool-icon {
+  width: 48px; height: 48px; border-radius: 12px;
+  background: var(--surface-2); color: var(--accent);
+  display: grid; place-items: center;
+}
+.tool-card h3 { font-size: 1.1rem; margin: 0; }
+.tool-card p { font-size: 0.9rem; color: var(--muted); margin: 0; flex: 1; }
+.tool-card .arrow { font-size: 1.2rem; color: var(--accent); opacity: 0; transform: translateX(-10px); transition: all 0.2s; margin-top: auto; }
+.tool-card:hover .arrow { opacity: 1; transform: translateX(0); }
+
+/* --- Проекты (Разноуровневая сетка) --- */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.project-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+  overflow: hidden; display: flex; flex-direction: column;
+  transition: all 0.2s; box-shadow: var(--shadow);
+}
+.project-card:hover { transform: translateY(-4px); border-color: var(--accent); box-shadow: var(--shadow-lg); }
+.project-header {
+  padding: 24px 24px 0; display: flex; justify-content: space-between; align-items: flex-start;
+}
+.project-icon { color: var(--accent); }
+.project-body { padding: 16px 24px 24px; flex: 1; display: flex; flex-direction: column; }
+.project-body h3 { font-size: 1.15rem; margin-bottom: 8px; }
+.project-body p { font-size: 0.9rem; color: var(--muted); margin-bottom: 20px; flex: 1; }
+.project-footer {
+  display: flex; gap: 8px; flex-wrap: wrap; padding-top: 16px; border-top: 1px solid var(--border); margin-top: auto;
+}
+
+/* --- Почему ArduInfo (Горизонтальные полосы вместо карточек) --- */
+.features-list {
+  display: flex; flex-direction: column; gap: 0;
+  border: 1px solid var(--border); border-radius: 16px; background: var(--surface); overflow: hidden;
+}
+.feature-row {
+  display: flex; align-items: center; gap: 24px; padding: 32px;
+  border-bottom: 1px solid var(--border); transition: background 0.15s;
+}
+.feature-row:last-child { border-bottom: none; }
+.feature-row:hover { background: var(--surface-2); }
+.feature-icon {
+  width: 56px; height: 56px; border-radius: 14px; background: var(--accent-soft); color: var(--accent);
+  display: grid; place-items: center; flex-shrink: 0;
+}
+.feature-text h3 { font-size: 1.1rem; margin-bottom: 4px; }
+.feature-text p { font-size: 0.95rem; color: var(--muted); margin: 0; }
+
+/* Адаптив */
+@media(max-width: 1024px) {
+  .tools-grid { grid-template-columns: 1fr 1fr; }
+  .projects-grid { grid-template-columns: 1fr 1fr; }
+}
+@media(max-width: 768px) {
+  .tools-grid { grid-template-columns: 1fr; }
+  .projects-grid { grid-template-columns: 1fr; }
+  .feature-row { flex-direction: column; align-items: flex-start; padding: 24px; gap: 16px; }
+}
+
+/* =========================================================
+   ФУТЕР
+   ========================================================= */
+.site-footer {
+  background: var(--surface); border-top: 1px solid var(--border);
+  padding: 60px 0 30px; margin-top: 60px;
+}
+.footer-grid {
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 40px;
+}
+.footer-about p { font-size: 0.95rem; color: var(--muted); max-width: 300px; margin-top: 16px; }
+.footer-col h4 {
+  font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em;
+  color: var(--text); margin-bottom: 20px;
+}
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+.footer-col a { color: var(--muted); font-size: 0.95rem; }
+.footer-col a:hover { color: var(--accent); }
+.footer-bottom {
+  border-top: 1px solid var(--border); padding-top: 24px;
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
+  font-size: 0.85rem; color: var(--muted);
+}
+@media(max-width: 800px) {
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+}
+@media(max-width: 500px) {
+  .footer-grid { grid-template-columns: 1fr; }
+}
+
+/* =========================================================
+   ПРОЧИЕ СТРАНИЦЫ (Списки, Калькуляторы, Код)
+   ========================================================= */
+.breadcrumbs { font-size: 0.85rem; color: var(--muted); margin-bottom: 24px; display: flex; gap: 8px; align-items: center; }
+.breadcrumbs span { opacity: 0.5; }
+
+.filters { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 32px; align-items: center; }
+.search-input { flex: 1; min-width: 250px; padding: 14px 20px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); color: var(--text); outline: none; font-size: 1rem; }
+.search-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip { padding: 8px 16px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); font-size: 0.9rem; font-weight: 600; color: var(--muted); cursor: pointer; transition: all 0.15s; }
+.chip:hover { border-color: var(--accent); color: var(--accent); }
+.chip.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+.tool-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; box-shadow: var(--shadow); margin-bottom: 32px; }
+.form-row { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom: 20px; }
+.field { display: flex; flex-direction: column; gap: 8px; }
+.field label { font-size: 0.9rem; font-weight: 600; color: var(--text); }
+.field input, .field select { padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); color: var(--text); outline: none; font-size: 1rem; }
+.field input:focus, .field select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.result-box { background: var(--surface-2); border-radius: 12px; padding: 24px; margin-top: 24px; border-left: 4px solid var(--accent); }
+.result-main { font-size: 1.8rem; font-weight: 900; color: var(--accent); line-height: 1.2; font-variant-numeric: tabular-nums; }
+
+.code-wrap { background: var(--code-bg); border-radius: 12px; overflow: hidden; margin: 24px 0; border: 1px solid rgba(255,255,255,0.05); }
+.code-head { display: flex; justify-content: space-between; padding: 12px 20px; background: rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.05); }
+.code-head span { color: #8fa6b6; font-family: var(--mono); font-size: 0.8rem; }
+.copy-btn { color: #fff; background: var(--accent); border-radius: 6px; padding: 6px 12px; font-size: 0.8rem; font-weight: 600; }
+pre { padding: 24px; overflow-x: auto; font-family: var(--mono); font-size: 0.9rem; line-height: 1.6; color: var(--code-text); }
+
+/* Стили для резистора */
+.resistor-visual{display:flex;align-items:center;justify-content:center;padding:40px 10px}
+.r-lead{width:60px;height:4px;background:linear-gradient(180deg,#c8d3da,#98a8b3);border-radius:2px}
+.r-body{display:flex;align-items:center;justify-content:center;gap:9px;width:220px;height:70px;border-radius:35px/50%;background:linear-gradient(180deg,#f5e6cc 0%,#d4b574 50%,#8a6b35 100%);box-shadow:inset 0 4px 8px rgba(255,255,255,0.6),inset 0 -4px 8px rgba(0,0,0,0.4),0 10px 20px rgba(0,0,0,0.2);padding:0 16px;position:relative}
+.band{width:16px;height:105%;border-radius:4px;background:#222;transition:background .18s;box-shadow:0 2px 4px rgba(0,0,0,0.5);position:relative;z-index:2}
+.band.b1{margin-left:-6px}.band.b-tol{margin-left:auto}
+
+.to-top{position:fixed;right:24px;bottom:24px;width:48px;height:48px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:1.2rem;box-shadow:0 10px 20px rgba(0,151,157,0.4);opacity:0;visibility:hidden;transition:all 0.25s;z-index:90;cursor:pointer}
+.to-top.show{opacity:1;visibility:visible}
+
+.toast{position:fixed;left:50%;bottom:30px;transform:translate(-50%,20px);background:var(--text);color:var(--bg);padding:12px 24px;border-radius:30px;font-weight:600;box-shadow:var(--shadow-lg);opacity:0;pointer-events:none;transition:all 0.3s;z-index:1000}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#app" style="position:absolute;top:-100px;left:0;background:var(--accent);color:#fff;padding:10px;z-index:9999;">Перейти к содержимому</a>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="#/" class="logo"><span class="logo-mark">A</span><span class="logo-text">Ardu<strong>Info</strong></span></a>
+    <nav class="nav" id="nav">
+      <a href="#/">Главная</a>
+      <a href="#/projects">Проекты</a>
+      <a href="#/tools">Инструменты</a>
+      <a href="#/resistor">Резисторы</a>
+      <a href="#/basics">Основы</a>
+      <a href="#/about">О сайте</a>
+    </nav>
+    <div class="header-actions">
+      <button class="icon-btn" id="themeToggle" type="button"></button>
+      <button class="icon-btn menu-btn" id="menuBtn" type="button"></button>
+    </div>
+  </div>
+</header>
+
+<main id="app"></main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-about">
+        <a href="#/" class="logo"><span class="logo-mark">A</span><span class="logo-text">Ardu<strong>Info</strong></span></a>
+        <p>Инженерные проекты, точные калькуляторы и справочники. Без воды и лишних проводов.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Разделы</h4>
+        <ul>
+          <li><a href="#/projects">Проекты</a></li>
+          <li><a href="#/tools">Инструменты</a></li>
+          <li><a href="#/resistor">Калькулятор резисторов</a></li>
+          <li><a href="#/basics">Основы</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Популярное</h4>
+        <ul>
+          <li><a href="#/project/blink">Blink</a></li>
+          <li><a href="#/project/ultrasonic">Дальномер</a></li>
+          <li><a href="#/project/dht11">Датчик DHT11</a></li>
+          <li><a href="#/project/lcd1602">Дисплей 1602</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Информация</h4>
+        <ul>
+          <li><a href="#/about">О сайте</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span id="year">2025</span> ArduInfo. Все материалы предоставлены в образовательных целях.</span>
+      <span>Сделано с ♥ для начинающих</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+const PROJECTS = [
+  { id:'blink', title:'Мигающий светодиод (Blink)', level:'Новичок', category:'Основы', time:'10 минут', icon:'bulb',
+    short:'Самый первый проект каждого ардуинщика: заставляем встроенный светодиод мигать.',
+    description:'Проект Blink — классика. Он не требует дополнительных деталей, кроме платы Arduino и USB-кабеля. Вы научитесь пользоваться pinMode(), digitalWrite() и delay().',
+    components:['Плата Arduino Uno (или Nano)','USB-кабель','Компьютер с Arduino IDE'],
+    steps:[
+      {t:'Установите Arduino IDE',d:'Скачайте с arduino.cc и установите. Драйверы обычно ставятся автоматически.'},
+      {t:'Подключите плату',d:'Соедините Arduino с компьютером USB-кабелем. В IDE выберите Инструменты → Плата → Arduino Uno и правильный COM-порт.'},
+      {t:'Вставьте код',d:'Скопируйте скетч ниже в редактор Arduino IDE.'},
+      {t:'Загрузите скетч',d:'Нажмите «Загрузить». Через пару секунд светодиод L начнёт мигать.'}
+    ],
+    code:`// Проект 1: Мигающий светодиод\n\nvoid setup() {\n  pinMode(LED_BUILTIN, OUTPUT);\n}\n\nvoid loop() {\n  digitalWrite(LED_BUILTIN, HIGH);\n  delay(1000);\n  digitalWrite(LED_BUILTIN, LOW);\n  delay(1000);\n}`,
+    tips:['Если не мигает — проверьте COM-порт.','LED_BUILTIN для Uno равен 13.','Измените delay() и посмотрите, что получится.']
+  },
+  { id:'button-led', title:'Кнопка управляет светодиодом', level:'Новичок', category:'Основы', time:'20 минут', icon:'button',
+    short:'Учимся читать состояние кнопки и управлять светодиодом.',
+    description:'Первый проект с внешними компонентами. Вы узнаете, что такое INPUT_PULLUP и как бороться с дребезгом контактов.',
+    components:['Arduino Uno','Тактовая кнопка','Светодиод 5 мм','Резистор 220 Ом','Провода','Макетная плата'],
+    steps:[
+      {t:'Соберите схему',d:'Одну ногу кнопки — на GND, вторую — на пин 2. Светодиод: анод через резистор 220 Ом на пин 13, катод на GND.'},
+      {t:'Загрузите скетч',d:'Скопируйте код и загрузите.'},
+      {t:'Проверьте',d:'При нажатии светодиод горит. Откройте Монитор порта.'}
+    ],
+    code:`// Проект 2: Кнопка + светодиод\nconst int BUTTON_PIN = 2;\nconst int LED_PIN    = 13;\n\nvoid setup() {\n  pinMode(LED_PIN, OUTPUT);\n  pinMode(BUTTON_PIN, INPUT_PULLUP);\n  Serial.begin(9600);\n}\n\nvoid loop() {\n  int state = digitalRead(BUTTON_PIN);\n  if (state == LOW) {\n    digitalWrite(LED_PIN, HIGH);\n    Serial.println("Кнопка нажата");\n  } else {\n    digitalWrite(LED_PIN, LOW);\n  }\n  delay(20);\n}`,
+    tips:['INPUT_PULLUP — внешний резистор не нужен.','Резистор 220 Ом обязателен для LED.','delay(20) защищает от дребезга.']
+  },
+  { id:'traffic-light', title:'Светофор на трёх светодиодах', level:'Новичок', category:'Основы', time:'25 минут', icon:'traffic',
+    short:'Собираем мини-светофор и учимся работать с массивами.',
+    description:'Отличный проект для закрепления работы с несколькими выходами.',
+    components:['Arduino Uno','3 светодиода','3 резистора 220 Ом','Провода'],
+    steps:[
+      {t:'Подключите светодиоды',d:'Красный → 8, жёлтый → 9, зелёный → 10 через резисторы на GND.'},
+      {t:'Загрузите код',d:'Скетч использует массив пинов и цикл for.'},
+      {t:'Настройте тайминги',d:'Поменяйте задержки под себя.'}
+    ],
+    code:`// Проект 3: Светофор\nconst int RED    = 8;\nconst int YELLOW = 9;\nconst int GREEN  = 10;\n\nvoid setup() {\n  pinMode(RED, OUTPUT);\n  pinMode(YELLOW, OUTPUT);\n  pinMode(GREEN, OUTPUT);\n}\n\nvoid allOff() {\n  digitalWrite(RED, LOW);\n  digitalWrite(YELLOW, LOW);\n  digitalWrite(GREEN, LOW);\n}\n\nvoid loop() {\n  allOff(); digitalWrite(RED, HIGH);    delay(3000);\n  allOff(); digitalWrite(YELLOW, HIGH); delay(1000);\n  allOff(); digitalWrite(GREEN, HIGH);  delay(3000);\n  allOff(); digitalWrite(YELLOW, HIGH); delay(1000);\n}`,
+    tips:['Функция allOff() убирает дублирование.','Добавьте кнопку для пешеходов.','Замените delay() на millis() для реалистичности.']
+  },
+  { id:'fade-led', title:'Плавное затухание светодиода (PWM)', level:'Новичок', category:'Основы', time:'15 минут', icon:'fade',
+    short:'Используем ШИМ, чтобы плавно менять яркость светодиода.',
+    description:'ШИМ работает на пинах 3, 5, 6, 9, 10, 11 (помечены ~). analogWrite() принимает значения от 0 до 255.',
+    components:['Arduino Uno','Светодиод','Резистор 220 Ом','Провода'],
+    steps:[
+      {t:'Подключите светодиод',d:'Анод через резистор на пин 9, катод на GND.'},
+      {t:'Загрузите скетч',d:'LED плавно разгорается и гаснет.'},
+      {t:'Поэкспериментируйте',d:'Попробуйте шаг 5 и задержку 30 мс.'}
+    ],
+    code:`// Проект 4: Плавное затухание (PWM)\nconst int LED_PIN = 9;\n\nvoid setup() {\n  pinMode(LED_PIN, OUTPUT);\n}\n\nvoid loop() {\n  for (int b = 0; b <= 255; b += 5) {\n    analogWrite(LED_PIN, b);\n    delay(30);\n  }\n  for (int b = 255; b >= 0; b -= 5) {\n    analogWrite(LED_PIN, b);\n    delay(30);\n  }\n}`,
+    tips:['analogWrite() только на пинах с ~.','ШИМ-частота на Uno ~490 Гц.','Тот же приём для моторов и ламп.']
+  },
+  { id:'ultrasonic', title:'Дальномер на HC-SR04', level:'Средний', category:'Датчики', time:'35 минут', icon:'radar',
+    short:'Измеряем расстояние ультразвуком.',
+    description:'HC-SR04 посылает импульс и измеряет время до эха. Скорость звука 343 м/с.',
+    components:['Arduino Uno','HC-SR04','Провода'],
+    steps:[
+      {t:'Подключите',d:'VCC → 5V, GND → GND, TRIG → 9, ECHO → 10.'},
+      {t:'Загрузите',d:'Откройте Монитор порта на 9600.'},
+      {t:'Проверьте',d:'Подносите руку — показания меняются.'}
+    ],
+    code:`// Проект 5: Дальномер HC-SR04\nconst int TRIG_PIN = 9;\nconst int ECHO_PIN = 10;\n\nvoid setup() {\n  pinMode(TRIG_PIN, OUTPUT);\n  pinMode(ECHO_PIN, INPUT);\n  Serial.begin(9600);\n}\n\nlong measureDistance() {\n  digitalWrite(TRIG_PIN, LOW);\n  delayMicroseconds(2);\n  digitalWrite(TRIG_PIN, HIGH);\n  delayMicroseconds(10);\n  digitalWrite(TRIG_PIN, LOW);\n  long duration = pulseIn(ECHO_PIN, HIGH, 30000);\n  return duration * 0.0343 / 2;\n}\n\nvoid loop() {\n  long cm = measureDistance();\n  if (cm == 0) Serial.println("Вне зоны");\n  else { Serial.print("Расстояние: "); Serial.print(cm); Serial.println(" см"); }\n  delay(200);\n}`,
+    tips:['Работает от 2 см до 400 см.','Мягкие поверхности плохо отражают.','На ECHO — не больше 5 В.']
+  },
+  { id:'dht11', title:'Термометр и гигрометр на DHT11', level:'Средний', category:'Датчики', time:'30 минут', icon:'thermometer',
+    short:'Измеряем температуру и влажность.',
+    description:'DHT11 — дешёвый датчик. Точность ±2 °C и ±5 % влажности.',
+    components:['Arduino Uno','DHT11','Резистор 10 кОм','Провода'],
+    steps:[
+      {t:'Установите библиотеку',d:'Менеджер библиотек → «DHT sensor library» от Adafruit.'},
+      {t:'Подключите',d:'VCC → 5V, GND → GND, DATA → 2, подтяжка 10 кОм.'},
+      {t:'Загрузите',d:'Откройте Монитор порта.'}
+    ],
+    code:`// Проект 6: DHT11\n#include <DHT.h>\n#define DHTPIN  2\n#define DHTTYPE DHT11\nDHT dht(DHTPIN, DHTTYPE);\n\nvoid setup() {\n  Serial.begin(9600);\n  dht.begin();\n}\n\nvoid loop() {\n  delay(2000);\n  float t = dht.readTemperature();\n  float h = dht.readHumidity();\n  if (isnan(t) || isnan(h)) { Serial.println("Ошибка!"); return; }\n  Serial.print("T: "); Serial.print(t); Serial.print(" C  H: "); Serial.print(h); Serial.println(" %");\n}`,
+    tips:['Опрос не чаще 1 раза в 2 сек.','DHT22 или BME280 точнее.','Проверьте резистор 10 кОм.']
+  },
+  { id:'servo', title:'Управление сервоприводом', level:'Новичок', category:'Моторы', time:'20 минут', icon:'motor',
+    short:'Крутим сервопривод на нужный угол.',
+    description:'Сервоприводы поворачиваются на угол 0–180°. Библиотека Servo упрощает управление.',
+    components:['Arduino Uno','Сервопривод SG90','Провода'],
+    steps:[
+      {t:'Подключите',d:'Коричневый — GND, красный — 5V, оранжевый — пин 9.'},
+      {t:'Загрузите',d:'Библиотека Servo входит в IDE.'},
+      {t:'Проверьте',d:'Вал ходит от 0° до 180° и обратно.'}
+    ],
+    code:`// Проект 7: Сервопривод\n#include <Servo.h>\nServo myServo;\n\nvoid setup() { myServo.attach(9); }\n\nvoid loop() {\n  for (int a = 0; a <= 180; a++) { myServo.write(a); delay(15); }\n  for (int a = 180; a >= 0; a--) { myServo.write(a); delay(15); }\n}`,
+    tips:['Мощные сервы — от внешнего БП.','GND БП и Arduino соединить.','writeMicroseconds() для точности.']
+  },
+  { id:'buzzer', title:'Мелодия на пьезоизлучателе', level:'Новичок', category:'Звук', time:'25 минут', icon:'music',
+    short:'Играем мелодию функцией tone().',
+    description:'Пьезо превращает колебания в звук. tone() генерирует частоту.',
+    components:['Arduino Uno','Пьезоизлучатель','Провода'],
+    steps:[
+      {t:'Подключите',d:'Плюс на пин 8, минус на GND.'},
+      {t:'Загрузите',d:'Arduino сыграет Happy Birthday.'},
+      {t:'Настройте темп',d:'tempo влияет на длительность.'}
+    ],
+    code:`// Проект 8: Мелодия\nconst int BUZZER = 8;\n#define NOTE_C4 262\n#define NOTE_D4 294\n#define NOTE_E4 330\n#define NOTE_F4 349\n#define NOTE_G4 392\n\nint melody[] = {NOTE_C4,NOTE_C4,NOTE_D4,NOTE_C4,NOTE_F4,NOTE_E4};\nint durations[] = {4,4,4,4,4,2};\nconst int tempo = 120;\n\nvoid setup() { pinMode(BUZZER, OUTPUT); }\n\nvoid loop() {\n  int notes = sizeof(melody) / sizeof(melody[0]);\n  int wholenote = (60000 * 4) / tempo;\n  for (int i = 0; i < notes; i++) {\n    int nd = wholenote / durations[i];\n    tone(BUZZER, melody[i], nd * 0.9);\n    delay(nd);\n    noTone(BUZZER);\n  }\n  delay(3000);\n}`,
+    tips:['tone() работает на любом пине.','Конфликт с ШИМ на пинах 3 и 11.','Пассивный buzzer играет мелодии.']
+  },
+  { id:'photoresistor', title:'Автоматический ночник', level:'Средний', category:'Датчики', time:'30 минут', icon:'moon',
+    short:'Светодиод включается, когда темно.',
+    description:'Фоторезистор + резистор = делитель напряжения. Читаем аналоговым входом.',
+    components:['Arduino Uno','Фоторезистор GL5528','Резистор 10 кОм','Светодиод','Резистор 220 Ом'],
+    steps:[
+      {t:'Соберите делитель',d:'Один вывод → 5V, второй → A0 и через 10 кОм → GND.'},
+      {t:'Подключите LED',d:'Через 220 Ом на пин 9.'},
+      {t:'Откалибруйте',d:'Посмотрите значения днём и ночью, впишите порог.'}
+    ],
+    code:`// Проект 9: Ночник\nconst int LDR_PIN = A0;\nconst int LED_PIN = 9;\nconst int THRESHOLD = 400;\n\nvoid setup() {\n  pinMode(LED_PIN, OUTPUT);\n  Serial.begin(9600);\n}\n\nvoid loop() {\n  int light = analogRead(LDR_PIN);\n  Serial.print("Свет: "); Serial.println(light);\n  if (light < THRESHOLD) analogWrite(LED_PIN, 255);\n  else analogWrite(LED_PIN, 0);\n  delay(100);\n}`,
+    tips:['analogRead() от 0 до 1023.','Темнее — выше сопротивление.','Гистерезис уберёт дрожание.']
+  },
+  { id:'rgb-led', title:'RGB-светодиод: все цвета радуги', level:'Новичок', category:'Основы', time:'20 минут', icon:'rainbow',
+    short:'Смешиваем 3 канала ШИМ — любой цвет.',
+    description:'Три кристалла: R, G, B. Меняя яркость каждого — 16,7 млн оттенков.',
+    components:['Arduino Uno','RGB-светодиод','3 резистора 220 Ом'],
+    steps:[
+      {t:'Подключите',d:'Красный → 9, зелёный → 10, синий → 11 через резисторы. Общий катод → GND.'},
+      {t:'Загрузите',d:'LED переливается всеми цветами.'},
+      {t:'Свой цвет',d:'setColor(r,g,b) со своими значениями.'}
+    ],
+    code:`// Проект 10: RGB\nconst int R = 9, G = 10, B = 11;\n\nvoid setup() {\n  pinMode(R, OUTPUT); pinMode(G, OUTPUT); pinMode(B, OUTPUT);\n}\n\nvoid setColor(int r, int g, int b) {\n  analogWrite(R, r); analogWrite(G, g); analogWrite(B, b);\n}\n\nvoid loop() {\n  setColor(255, 0, 0); delay(500);\n  setColor(0, 255, 0); delay(500);\n  setColor(0, 0, 255); delay(500);\n  setColor(255, 255, 0); delay(500);\n  setColor(0, 255, 255); delay(500);\n  setColor(255, 0, 255); delay(500);\n  setColor(255, 255, 255); delay(500);\n}`,
+    tips:['Общий анод — логика инвертирована.','3 резистора обязательны.','Для лент WS2812 — FastLED.']
+  },
+  { id:'lcd1602', title:'Дисплей 1602 I2C', level:'Средний', category:'Дисплеи', time:'35 минут', icon:'monitor',
+    short:'Выводим текст на LCD через 2 линии I2C.',
+    description:'Модуль I2C — всего 4 провода. Библиотека LiquidCrystal_I2C упрощает вывод.',
+    components:['Arduino Uno','LCD 1602 I2C','4 провода'],
+    steps:[
+      {t:'Подключите',d:'GND → GND, VCC → 5V, SDA → A4, SCL → A5.'},
+      {t:'Установите библиотеку',d:'«LiquidCrystal I2C» by Frank de Brabander.'},
+      {t:'Узнайте адрес',d:'I2C Scanner. Обычно 0x27 или 0x3F.'}
+    ],
+    code:`// Проект 11: LCD 1602 I2C\n#include <Wire.h>\n#include <LiquidCrystal_I2C.h>\n\nLiquidCrystal_I2C lcd(0x27, 16, 2);\n\nvoid setup() {\n  lcd.init();\n  lcd.backlight();\n  lcd.setCursor(0, 0); lcd.print("   ArduInfo    ");\n  lcd.setCursor(0, 1); lcd.print("  Привет, мир!  ");\n}\n\nvoid loop() {\n  lcd.setCursor(0, 1);\n  lcd.print("Uptime: ");\n  lcd.print(millis() / 1000);\n  lcd.print(" s   ");\n  delay(500);\n}`,
+    tips:['Пустой экран — крутите контраст.','setCursor(столбец, строка).','Пробелы стирают старые символы.']
+  },
+  { id:'ir-remote', title:'Управление ИК-пультом', level:'Средний', category:'Датчики', time:'30 минут', icon:'remote',
+    short:'Принимаем сигналы от бытового пульта.',
+    description:'ИК-приёмник TSOP1838 декодирует сигналы. Библиотека IRremote получает код кнопки.',
+    components:['Arduino Uno','ИК-приёмник TSOP1838','Пульт'],
+    steps:[
+      {t:'Подключите',d:'VCC → 5V, GND → GND, OUT → 2.'},
+      {t:'Установите библиотеку',d:'«IRremote» by Armin Joachimsmeyer.'},
+      {t:'Считайте коды',d:'Нажимайте кнопки, записывайте коды.'}
+    ],
+    code:`// Проект 12: ИК-пульт\n#include <IRremote.hpp>\nconst int IR_PIN = 2;\n\nvoid setup() {\n  Serial.begin(9600);\n  IrReceiver.begin(IR_PIN, ENABLE_LED_FEEDBACK);\n}\n\nvoid loop() {\n  if (IrReceiver.decode()) {\n    Serial.print("Код: 0x");\n    Serial.println(IrReceiver.decodedIRData.decodedRawData, HEX);\n    IrReceiver.resume();\n  }\n}`,
+    tips:['Коды разных пультов отличаются.','Без препятствий до пульта.','Солнце содержит ИК и мешает.']
+  }
+];
+const CATEGORIES = ['Все','Основы','Датчики','Моторы','Звук','Дисплеи'];
+const HL_KEYWORDS = ['void','int','long','float','double','char','bool','boolean','byte','word','unsigned','signed','const','static','volatile','if','else','for','while','do','switch','case','default','break','continue','return','struct','class','new','delete','sizeof','true','false','HIGH','LOW','INPUT','OUTPUT','INPUT_PULLUP','LED_BUILTIN','String'];
+const HL_FUNCS = ['pinMode','digitalWrite','digitalRead','analogRead','analogWrite','delay','delayMicroseconds','millis','micros','map','constrain','tone','noTone','pulseIn','random','randomSeed','Serial','setup','loop','begin','print','println','write','read','available','isnan','min','max','abs','pow','sqrt','myServo','attach','setCursor','init','backlight','lcd','dht','IrReceiver','decode','resume','setColor'];
+
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function highlight(src){
+  let t = esc(src);
+  const kw = HL_KEYWORDS.join('|');
+  const fn = HL_FUNCS.join('|');
+  const rx = new RegExp(
+    '(\\/\\/[^\\n]*|\\/\\*[\\s\\S]*?\\*\\/)' +
+    '|("(?:[^"\\\\]|\\\\.)*"|\'(?:[^\'\\\\]|\\\\.)*\')' +
+    '|(^\\s*#\\w+.*$)' +
+    '|\\b(' + kw + ')\\b' +
+    '|\\b(' + fn + ')(?=\\s*\\()' +
+    '|\\b(\\d+(?:\\.\\d+)?)\\b',
+    'gm');
+  return t.replace(rx, (m,c,s,p,k,f,n)=>{
+    if(c) return '<span style="color:#5f7b8c;font-style:italic">'+c+'</span>';
+    if(s) return '<span style="color:#8fd68f">'+s+'</span>';
+    if(p) return '<span style="color:#e07b9a">'+p+'</span>';
+    if(k) return '<span style="color:#6fb6ff;font-weight:600">'+k+'</span>';
+    if(f) return '<span style="color:#c792ea">'+f+'</span>';
+    if(n) return '<span style="color:#e5b567">'+n+'</span>';
+    return m;
+  });
+}
+function renderCode(code, name){
+  return '<div class="code-wrap"><div class="code-head"><span>'+(name||'sketch.ino')+'</span><button class="copy-btn" data-copy>Копировать</button></div><pre><code>'+highlight(code.trim())+'</code></pre></div>';
+}
+
+const app = document.getElementById('app');
+
+function navigate(){
+  const hash = location.hash.slice(1) || '/';
+  document.title = 'ArduInfo — проекты, калькуляторы, справочники';
+  const parts = hash.split('/').filter(Boolean);
+  const page = parts[0] || '';
+
+  document.querySelectorAll('.nav a').forEach(a => {
+    const href = a.getAttribute('href').slice(1);
+    a.classList.toggle('active', href === '/' + page || (page === '' && href === '/'));
+  });
+
+  if(page === '') renderHome();
+  else if(page === 'projects') renderProjects();
+  else if(page === 'project' && parts[1]) renderProject(parts[1]);
+  else if(page === 'resistor') renderResistor();
+  else if(page === 'tools') renderTools();
+  else if(page === 'basics') renderBasics();
+  else if(page === 'about') renderAbout();
+  else render404();
+
+  window.scrollTo(0,0);
+  document.getElementById('app').focus({preventScroll:true});
+  document.getElementById('nav').classList.remove('open');
+  document.getElementById('menuBtn').setAttribute('aria-expanded','false');
+}
+
+function projectCard(p){
+  return '<article class="project-card">'+
+    '<div class="project-header">'+
+      '<div class="project-icon">'+icon(p.icon, 32)+'</div>'+
+      '<span class="badge">'+p.time+'</span>'+
+    '</div>'+
+    '<div class="project-body">'+
+      '<h3>'+p.title+'</h3>'+
+      '<p>'+p.short+'</p>'+
+      '<div class="project-footer">'+
+        '<span class="badge badge-accent">'+p.category+'</span>'+
+        '<span class="badge">'+p.level+'</span>'+
+      '</div>'+
+    '</div>'+
+  '</article>';
+}
+
+function renderHome(){
+  const featured = ['blink','button-led','ultrasonic','dht11','servo','lcd1602']
+    .map(id => PROJECTS.find(p => p.id === id)).filter(Boolean);
+
+  app.innerHTML = `
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <div class="hero-badge">
+          ${icon('chip', 18)} <span>Инженерный подход</span>
+        </div>
+        <h1>Проекты и инструменты для <span>Arduino</span></h1>
+        <p>Готовые схемы, точные калькуляторы и помощь ИИ. Без лишней воды и сложных терминов.</p>
+        <div style="display:flex; gap:16px; flex-wrap:wrap;">
+          <a class="btn btn-primary" href="#/projects">Смотреть проекты →</a>
+          <a class="btn btn-ghost" href="#/resistor">Калькулятор резисторов</a>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat"><b>${PROJECTS.length}+</b><span>Проектов</span></div>
+          <div class="hero-stat"><b>6</b><span>Калькуляторов</span></div>
+          <div class="hero-stat"><b>100%</b><span>Open Source</span></div>
+        </div>
+      </div>
+      <div class="hero-art">
+        <div class="hero-art-header">
+          <div class="hero-art-dot"></div>
+          <div class="hero-art-dot"></div>
+          <div class="hero-art-dot"></div>
+        </div>
+        <div class="hero-art-body">
+          <div style="color:#6a9955">// blink.ino</div>
+          <div style="color:#6a9955">// Классический старт</div>
+          <div>&nbsp;</div>
+          <div><span style="color:#569cd6">void</span> <span style="color:#dcdcaa">setup</span>() {</div>
+          <div>&nbsp;&nbsp;<span style="color:#dcdcaa">pinMode</span>(LED_BUILTIN, OUTPUT);</div>
+          <div>}</div>
+          <div>&nbsp;</div>
+          <div><span style="color:#569cd6">void</span> <span style="color:#dcdcaa">loop</span>() {</div>
+          <div>&nbsp;&nbsp;<span style="color:#dcdcaa">digitalWrite</span>(LED_BUILTIN, <span style="color:#b5cea8">HIGH</span>);</div>
+          <div>&nbsp;&nbsp;<span style="color:#dcdcaa">delay</span>(<span style="color:#b5cea8">1000</span>);</div>
+          <div>&nbsp;&nbsp;<span style="color:#dcdcaa">digitalWrite</span>(LED_BUILTIN, <span style="color:#b5cea8">LOW</span>);</div>
+          <div>&nbsp;&nbsp;<span style="color:#dcdcaa">delay</span>(<span style="color:#b5cea8">1000</span>);</div>
+          <div>}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TOOLS -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <h2>Быстрые инструменты</h2>
+        <p>То, что нужно каждый день для расчётов и подбора компонентов.</p>
+      </div>
+      <div class="tools-grid">
+        <a href="#/resistor" class="tool-card">
+          <div class="tool-icon">${icon('ruler', 24)}</div>
+          <h3>Калькулятор резисторов</h3>
+          <p>Цветовая маркировка 4, 5 и 6 полос — туда и обратно.</p>
+          <div class="arrow">→</div>
+        </a>
+        <a href="#/tools" class="tool-card">
+          <div class="tool-icon">${icon('bulb', 24)}</div>
+          <h3>Резистор для LED</h3>
+          <p>Подберём правильный номинал и мощность под ваш светодиод.</p>
+          <div class="arrow">→</div>
+        </a>
+        <a href="#/tools" class="tool-card">
+          <div class="tool-icon">${icon('bolt', 24)}</div>
+          <h3>Закон Ома</h3>
+          <p>Заполните два поля — напряжение, ток, сопротивление или мощность.</p>
+          <div class="arrow">→</div>
+        </a>
+        <a href="#/tools" class="tool-card">
+          <div class="tool-icon">${icon('chart', 24)}</div>
+          <h3>Пересчёт АЦП</h3>
+          <p>Быстрый перевод значений analogRead() в реальное напряжение.</p>
+          <div class="arrow">→</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section class="section" style="background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+    <div class="container">
+      <div class="section-head">
+        <h2>Проекты для старта</h2>
+        <p>Каждый проект — с кодом, деталями и пошаговой сборкой.</p>
+      </div>
+      <div class="projects-grid">
+        ${featured.map(projectCard).join('')}
+      </div>
+      <div style="text-align:center; margin-top:48px;">
+        <a class="btn btn-primary" href="#/projects">Все проекты →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES (Горизонтальные полосы) -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head center">
+        <h2>Почему ArduInfo</h2>
+        <p>Мы делаем так, чтобы вы не бросили на втором вечере.</p>
+      </div>
+      <div class="features-list">
+        <div class="feature-row">
+          <div class="feature-icon">${icon('code', 24)}</div>
+          <div class="feature-text">
+            <h3>Понятный код</h3>
+            <p>Каждая строка скетча прокомментирована на русском. Никаких «магических» конструкций.</p>
+          </div>
+        </div>
+        <div class="feature-row">
+          <div class="feature-icon">${icon('plug', 24)}</div>
+          <div class="feature-text">
+            <h3>Схемы подключения</h3>
+            <p>Описываем, какой провод куда идёт, и почему именно так, а не иначе.</p>
+          </div>
+        </div>
+        <div class="feature-row">
+          <div class="feature-icon">${icon('calculator', 24)}</div>
+          <div class="feature-text">
+            <h3>Живые калькуляторы</h3>
+            <p>Считайте прямо в браузере, без установки дополнительных программ.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  `;
+  bindCopyButtons();
+}
+
+function renderProjects(){
+  app.innerHTML = `
+  <section class="section">
+    <div class="container">
+      <div class="breadcrumbs"><a href="#/">Главная</a><span>/</span><span>Проекты</span></div>
+      <h1>Проекты на Arduino</h1>
+      <p class="lead" style="max-width:70ch">Готовые проекты с понятными схемами, кодом и пошаговой сборкой.</p>
+      <div class="filters" style="margin-top:32px">
+        <input type="search" class="search-input" id="projectSearch" placeholder="Поиск: дальномер, дисплей, светодиод...">
+      </div>
+      <div class="chips" id="categoryChips" style="margin-bottom:32px"></div>
+      <div class="projects-grid" id="projectsGrid"></div>
+    </div>
+  </section>`;
+
+  const chipsWrap = document.getElementById('categoryChips');
+  const searchInput = document.getElementById('projectSearch');
+  const grid = document.getElementById('projectsGrid');
+  let activeCategory = 'Все', query = '';
+
+  CATEGORIES.forEach(cat => {
+    const btn = document.createElement('button');
+    btn.className = 'chip' + (cat === 'Все' ? ' active' : '');
+    btn.textContent = cat;
+    btn.addEventListener('click', () => {
+      activeCategory = cat;
+      chipsWrap.querySelectorAll('.chip').forEach(c => c.classList.toggle('active', c === btn));
+      render();
+    });
+    chipsWrap.appendChild(btn);
+  });
+
+  function render(){
+    const list = PROJECTS.filter(p => {
+      const okCat = activeCategory === 'Все' || p.category === activeCategory;
+      const hay = (p.title + ' ' + p.short + ' ' + p.category + ' ' + p.level).toLowerCase();
+      return okCat && (!query || hay.includes(query));
+    });
+    if(!list.length){
+      grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:60px 20px; color:var(--muted)">Ничего не найдено</div>';
+      return;
+    }
+    grid.innerHTML = list.map(projectCard).join('');
+  }
+
+  searchInput.addEventListener('input', () => { query = searchInput.value.trim().toLowerCase(); render(); });
+  render();
+}
+
+function renderProject(id){
+  const p = PROJECTS.find(x => x.id === id);
+  if(!p){
+    app.innerHTML = '<section class="section"><div class="container"><div style="text-align:center; padding:80px;"><h2>Проект не найден</h2><a class="btn btn-primary" href="#/projects" style="margin-top:20px;">Все проекты</a></div></div></section>';
+    return;
+  }
+  document.title = p.title + ' — ArduInfo';
+
+  const related = PROJECTS.filter(x => x.id !== p.id && x.category === p.category).slice(0,3);
+  const fallback = PROJECTS.filter(x => x.id !== p.id).slice(0,3);
+  const rel = related.length ? related : fallback;
+
+  app.innerHTML = `
+  <section class="section">
+    <div class="container" style="max-width:900px">
+      <div class="breadcrumbs"><a href="#/">Главная</a><span>/</span><a href="#/projects">Проекты</a><span>/</span><span>${p.title}</span></div>
+      <div style="margin-bottom:20px; color:var(--accent)">${icon(p.icon, 56)}</div>
+      <h1 style="margin-bottom:20px">${p.title}</h1>
+      <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:32px;">
+        <span class="badge badge-accent">${p.category}</span>
+        <span class="badge">${p.level}</span>
+        <span class="badge">⏱ ${p.time}</span>
+      </div>
+      <p class="lead">${p.description}</p>
+      
+      <div class="section-sm" style="margin-top:40px;">
+        <h2>Что понадобится</h2>
+        <ul style="list-style:none; display:flex; flex-direction:column; gap:12px; margin-top:20px;">
+          ${p.components.map(c=>'<li style="display:flex; gap:12px; align-items:center; background:var(--surface); padding:16px 20px; border-radius:10px; border:1px solid var(--border);"><span style="color:var(--accent); font-weight:900;">▸</span> '+c+'</li>').join('')}
+        </ul>
+      </div>
+
+      <div class="section-sm" style="margin-top:40px;">
+        <h2>Порядок сборки</h2>
+        <ol style="list-style:none; display:flex; flex-direction:column; gap:20px; margin-top:20px; counter-reset: step;">
+          ${p.steps.map(s=>'<li style="position:relative; padding-left:48px;"><div style="position:absolute; left:0; top:0; width:32px; height:32px; background:var(--accent); color:#fff; border-radius:8px; display:grid; place-items:center; font-weight:800; counter-increment: step;">'+ (p.steps.indexOf(s)+1) +'</div><b style="display:block; font-size:1.1rem; margin-bottom:4px;">'+s.t+'</b><span style="color:var(--muted);">'+s.d+'</span></li>').join('')}
+        </ol>
+      </div>
+
+      <div class="section-sm" style="margin-top:40px;">
+        <h2>Код скетча</h2>
+        ${renderCode(p.code, p.id + '.ino')}
+      </div>
+
+      <div class="section-sm" style="margin-top:40px;">
+        <h2>Полезные советы</h2>
+        <ul style="list-style:none; display:flex; flex-direction:column; gap:12px; margin-top:20px;">
+          ${p.tips.map(t=>'<li style="display:flex; gap:12px; align-items:center; background:var(--surface); padding:16px 20px; border-radius:10px; border:1px solid var(--border);"><span style="color:var(--accent); font-weight:900;">✓</span> '+t+'</li>').join('')}
+        </ul>
+      </div>
+
+      <div style="display:flex; gap:16px; flex-wrap:wrap; margin:48px 0;">
+        <a class="btn btn-ghost" href="#/projects">← Все проекты</a>
+        <a class="btn btn-primary" href="#/resistor">Калькулятор резисторов</a>
+      </div>
+    </div>
+  </section>
+  
+  <section class="section" style="background:var(--surface); border-top:1px solid var(--border);">
+    <div class="container">
+      <h2>Похожие проекты</h2>
+      <div class="projects-grid" style="margin-top:32px;">${rel.map(projectCard).join('')}</div>
+    </div>
+  </section>`;
+  bindCopyButtons();
+}
+
+const COLORS = [
+  { name:'Чёрный', hex:'#1a1a1a', digit:0, mult:1, tol:null, temp:250 },
+  { name:'Коричневый', hex:'#6b3f1d', digit:1, mult:10, tol:1, temp:100 },
+  { name:'Красный', hex:'#d32f2f', digit:2, mult:100, tol:2, temp:50 },
+  { name:'Оранжевый', hex:'#ef6c00', digit:3, mult:1e3, tol:null, temp:15 },
+  { name:'Жёлтый', hex:'#fbc02d', digit:4, mult:1e4, tol:null, temp:25 },
+  { name:'Зелёный', hex:'#2e7d32', digit:5, mult:1e5, tol:0.5, temp:20 },
+  { name:'Синий', hex:'#1565c0', digit:6, mult:1e6, tol:0.25, temp:10 },
+  { name:'Фиолетовый', hex:'#7b1fa2', digit:7, mult:1e7, tol:0.1, temp:5 },
+  { name:'Серый', hex:'#8a8a8a', digit:8, mult:1e8, tol:0.05, temp:1 },
+  { name:'Белый', hex:'#f5f5f5', digit:9, mult:1e9, tol:null, temp:null },
+  { name:'Золотой', hex:'#d4af37', digit:null, mult:0.1, tol:5, temp:null },
+  { name:'Серебряный', hex:'#bfbfbf', digit:null, mult:0.01, tol:10, temp:null }
+];
+const E24 = [10,11,12,13,15,16,18,20,22,24,27,30,33,36,39,43,47,51,56,62,68,75,82,91];
+
+function fmtOhm(v){
+  if(!isFinite(v) || v <= 0) return '—';
+  if(v >= 1e9) return (v/1e9).toFixed(2).replace(/\.?0+$/,'') + ' ГОм';
+  if(v >= 1e6) return (v/1e6).toFixed(2).replace(/\.?0+$/,'') + ' МОм';
+  if(v >= 1e3) return (v/1e3).toFixed(2).replace(/\.?0+$/,'') + ' кОм';
+  return v.toFixed(2).replace(/\.?0+$/,'') + ' Ом';
+}
+
+function renderResistor(){
+  app.innerHTML = `
+  <section class="section">
+    <div class="container">
+      <div class="breadcrumbs"><a href="#/">Главная</a><span>/</span><a href="#/tools">Инструменты</a><span>/</span><span>Калькулятор резисторов</span></div>
+      <h1>Калькулятор резисторов</h1>
+      <p class="lead" style="max-width:70ch">Определите номинал по цветным полосам или подберите ближайший стандарт E24 по нужному сопротивлению.</p>
+
+      <div class="tool-panel" style="margin-top:32px">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:24px;">
+          <h2 style="margin:0;">Определить номинал по полосам</h2>
+          <div class="chips" id="bandChips">
+            <button type="button" class="chip active" data-bands="4">4 полосы</button>
+            <button type="button" class="chip" data-bands="5">5 полос</button>
+            <button type="button" class="chip" data-bands="6">6 полос</button>
+          </div>
+        </div>
+        
+        <div class="resistor-visual" aria-label="Визуальное представление резистора">
+          <div class="r-lead"></div>
+          <div class="r-body">
+            <span class="band b1" id="vBand1"></span>
+            <span class="band" id="vBand2"></span>
+            <span class="band" id="vBand3"></span>
+            <span class="band" id="vBandMult"></span>
+            <span class="band b-tol" id="vBandTol"></span>
+            <span class="band b-tol" id="vBandTemp"></span>
+          </div>
+          <div class="r-lead"></div>
+        </div>
+        
+        <div class="form-row" style="margin-top:32px">
+          <div class="field"><label for="band1">Полоса 1</label><select id="band1"></select></div>
+          <div class="field"><label for="band2">Полоса 2</label><select id="band2"></select></div>
+          <div class="field" id="wrapBand3"><label for="band3">Полоса 3</label><select id="band3"></select></div>
+          <div class="field"><label for="bandMult">Множитель</label><select id="bandMult"></select></div>
+          <div class="field"><label for="bandTol">Точность (±)</label><select id="bandTol"></select></div>
+          <div class="field" id="wrapBandTemp" style="display:none"><label for="bandTemp">ТКС</label><select id="bandTemp"></select></div>
+        </div>
+        <div class="result-box" id="resistorResult" aria-live="polite"></div>
+      </div>
+
+      <div class="tool-panel" style="margin-top:32px">
+        <h2 style="margin-bottom:24px">Подобрать цвета по сопротивлению</h2>
+        <div class="form-row">
+          <div class="field"><label for="reverseInput">Сопротивление</label><input type="number" id="reverseInput" inputmode="decimal" placeholder="например, 470" step="any" min="0"></div>
+          <div class="field"><label for="reverseUnit">Единица</label><select id="reverseUnit">
+            <option value="1">Ом</option><option value="1000" selected>кОм</option><option value="1000000">МОм</option>
+          </select></div>
+          <div class="field" style="justify-content:flex-end"><label>&nbsp;</label><button type="button" class="btn btn-primary" id="reverseBtn">Подобрать</button></div>
+        </div>
+        <div class="result-box" id="reverseResult" aria-live="polite"><p style="margin:0;">Введите значение и нажмите «Подобрать».</p></div>
+      </div>
+
+      <div class="section-sm" style="margin-top:48px">
+        <h2>Таблица цветовой маркировки</h2>
+        <div class="table-wrap" style="margin-top:24px; border:1px solid var(--border); border-radius:12px; overflow:hidden;">
+          <table style="width:100%; border-collapse:collapse; text-align:left; font-size:0.95rem;">
+            <thead style="background:var(--surface-2); border-bottom:1px solid var(--border);">
+              <tr><th style="padding:16px; font-weight:700;">Цвет</th><th style="padding:16px; font-weight:700;">Цифра</th><th style="padding:16px; font-weight:700;">Множитель</th><th style="padding:16px; font-weight:700;">Точность</th><th style="padding:16px; font-weight:700;">ТКС, ppm/°C</th></tr>
+            </thead>
+            <tbody>
+              ${COLORS.map(c => '<tr style="border-bottom:1px solid var(--border);"><td style="padding:12px 16px;">'+c.name+'</td><td style="padding:12px 16px;">'+(c.digit!==null?c.digit:'—')+'</td><td style="padding:12px 16px;">×'+c.mult+'</td><td style="padding:12px 16px;">'+(c.tol!==null?'±'+c.tol+'%':'—')+'</td><td style="padding:12px 16px;">'+(c.temp!==null?c.temp:'—')+'</td></tr>').join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>`;
+
+  let bands = 4;
+  const $ = id => document.getElementById(id);
+
+  function fillSelect(id, filterFn, selectedName){
+    const sel = $(id);
+    sel.innerHTML = '';
+    COLORS.forEach((c,i) => {
+      if(filterFn && !filterFn(c)) return;
+      const option = document.createElement('option');
+      option.value = String(i);
+      option.textContent = c.name;
+      sel.appendChild(option);
+    });
+    if(selectedName){
+      const idx = COLORS.findIndex(c => c.name === selectedName && (!filterFn || filterFn(c)));
+      if(idx >= 0) sel.value = String(idx);
+    }
+  }
+
+  const digitColor = d => COLORS.find(c => c.digit === d);
+  const colorByMult = m => COLORS.find(c => Math.abs(c.mult - m) < 1e-12);
+
+  function calculate(){
+    const c1 = COLORS[Number($("band1").value)];
+    const c2 = COLORS[Number($("band2").value)];
+    const c3 = bands >= 5 ? COLORS[Number($("band3").value)] : null;
+    const cm = COLORS[Number($("bandMult").value)];
+    const ct = COLORS[Number($("bandTol").value)];
+    const cc = bands === 6 ? COLORS[Number($("bandTemp").value)] : null;
+
+    if(!c1 || !c2 || !cm || !ct || (bands >= 5 && !c3) || (bands === 6 && !cc)){
+      $("resistorResult").innerHTML = '<p style="margin:0; color:var(--muted);">Выберите все полосы.</p>';
+      return;
+    }
+
+    const base = bands >= 5
+      ? c1.digit * 100 + c2.digit * 10 + c3.digit
+      : c1.digit * 10 + c2.digit;
+    const value = base * cm.mult;
+    const tol = ct.tol ?? 20;
+
+    const paint = (el,c) => {
+      if(!el) return;
+      el.style.background = c ? c.hex : 'transparent';
+      el.style.boxShadow = c && c.name === 'Белый' ? 'inset 0 0 0 1px #bbb' : 'inset 0 0 3px rgba(0,0,0,.35)';
+    };
+    paint($("vBand1"), c1);
+    paint($("vBand2"), c2);
+    paint($("vBand3"), c3);
+    paint($("vBandMult"), cm);
+    paint($("vBandTol"), ct);
+    paint($("vBandTemp"), cc);
+    $("vBand3").style.display = bands >= 5 ? '' : 'none';
+    $("vBandTemp").style.display = bands === 6 ? '' : 'none';
+
+    $("resistorResult").innerHTML =
+      '<div class="result-main" style="font-size:2rem; font-weight:900; color:var(--accent);">' + fmtOhm(value) + ' ± ' + tol + '%</div>' +
+      '<div style="font-size:1rem; color:var(--muted); margin-top:8px;">Диапазон: ' + fmtOhm(value*(1-tol/100)) + ' — ' + fmtOhm(value*(1+tol/100)) + '</div>' +
+      '<div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:16px; margin-top:24px;">' +
+        '<div style="background:var(--surface); padding:16px; border-radius:10px; border:1px solid var(--border);"><span style="display:block; font-size:0.85rem; color:var(--muted); font-weight:600; margin-bottom:4px;">Номинал</span><b style="font-size:1.2rem;">' + fmtOhm(value) + '</b></div>' +
+        '<div style="background:var(--surface); padding:16px; border-radius:10px; border:1px solid var(--border);"><span style="display:block; font-size:0.85rem; color:var(--muted); font-weight:600; margin-bottom:4px;">Точность</span><b style="font-size:1.2rem;">± ' + tol + '%</b></div>' +
+        '<div style="background:var(--surface); padding:16px; border-radius:10px; border:1px solid var(--border);"><span style="display:block; font-size:0.85rem; color:var(--muted); font-weight:600; margin-bottom:4px;">Полос</span><b style="font-size:1.2rem;">' + bands + '</b></div>' +
+        (bands === 6 ? '<div style="background:var(--surface); padding:16px; border-radius:10px; border:1px solid var(--border);"><span style="display:block; font-size:0.85rem; color:var(--muted); font-weight:600; margin-bottom:4px;">ТКС</span><b style="font-size:1.2rem;">' + cc.temp + ' ppm/°C</b></div>' : '') +
+      '</div>';
+  }
+
+  function setupBands(n){
+    bands = n;
+    const isDigit = c => c.digit !== null;
+    const isMultiplier = c => c.mult !== null;
+    const isTolerance = c => c.tol !== null;
+    const isTemp = c => c.temp !== null;
+
+    fillSelect('band1', isDigit, 'Коричневый');
+    fillSelect('band2', isDigit, 'Чёрный');
+    fillSelect('band3', isDigit, 'Красный');
+    fillSelect('bandMult', isMultiplier, n >= 5 ? 'Коричневый' : 'Красный');
+    fillSelect('bandTol', isTolerance, 'Золотой');
+    fillSelect('bandTemp', isTemp, 'Коричневый');
+
+    $("wrapBand3").style.display = n >= 5 ? '' : 'none';
+    $("wrapBandTemp").style.display = n === 6 ? '' : 'none';
+    document.querySelectorAll('#bandChips [data-bands]').forEach(b => b.classList.toggle('active', Number(b.dataset.bands) === n));
+    calculate();
+  }
+
+  document.querySelectorAll('#bandChips [data-bands]').forEach(btn => {
+    btn.addEventListener('click', () => setupBands(Number(btn.dataset.bands)));
+  });
+  ['band1','band2','band3','bandMult','bandTol','bandTemp'].forEach(id => $(id).addEventListener('change', calculate));
+
+  function reverseCalculate(){
+    const raw = String($("reverseInput").value).trim().replace(',', '.');
+    const amount = Number(raw);
+    const unit = Number($("reverseUnit").value);
+    const result = $("reverseResult");
+    if(!Number.isFinite(amount) || amount <= 0 || !Number.isFinite(unit)){
+      result.innerHTML = '<p style="margin:0; color:var(--muted);">Введите положительное число.</p>';
+      return;
+    }
+
+    const target = amount * unit;
+    let best = null;
+
+    for(let exponent = -2; exponent <= 9; exponent++){
+      for(const nominal of E24){
+        const candidate = nominal * Math.pow(10, exponent);
+        if(candidate <= 0) continue;
+        const diff = Math.abs(candidate - target);
+        if(!best || diff < best.diff) best = {candidate, diff, nominal, exponent};
+      }
+    }
+
+    if(!best){
+      result.innerHTML = '<p style="margin:0; color:var(--muted);">Не удалось подобрать номинал.</p>';
+      return;
+    }
+
+    const digits = best.nominal;
+    const d1 = Math.floor(digits / 10);
+    const d2 = digits % 10;
+    const c1 = digitColor(d1);
+    const c2 = digitColor(d2);
+    const multiplier = Math.pow(10, best.exponent);
+    const cm = colorByMult(multiplier);
+    const exact = Math.abs(best.diff) < 1e-12;
+
+    result.innerHTML =
+      '<div class="result-main" style="font-size:2rem; font-weight:900; color:var(--accent);">' + fmtOhm(best.candidate) + '</div>' +
+      '<div style="font-size:1rem; color:var(--muted); margin-top:8px;">' + (exact ? 'Точный номинал E24.' : 'Ближайший номинал E24. Отклонение: ' + fmtOhm(best.diff) + '.') + '</div>' +
+      '<div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:16px; margin-top:24px;">' +
+        '<div style="background:var(--surface); padding:16px; border-radius:10px; border:1px solid var(--border);"><span style="display:block; font-size:0.85rem; color:var(--muted); font-weight:600; margin-bottom:4px;">Полоса 1</span><b style="font-size:1.2rem;">' + (c1 ? c1.name : '—') + '</b></div>' +
+        '<div style="background:var(--surface); padding:16px; border-radius:10px; border:1px solid var(--border);"><span style="display:block; font-size:0.85rem; color:var(--muted); font-weight:600; margin-bottom:4px;">Полоса 2</span><b style="font-size:1.2rem;">' + (c2 ? c2.name : '—') + '</b></div>' +
+        '<div style="background:var(--surface); padding:16px; border-radius:10px; border:1px solid var(--border);"><span style="display:block; font-size:0.85rem; color:var(--muted); font-weight:600; margin-bottom:4px;">Множитель</span><b style="font-size:1.2rem;">' + (cm ? cm.name : '×' + multiplier) + '</b></div>' +
+      '</div>';
+  }
+
+  $("reverseBtn").addEventListener('click', reverseCalculate);
+  $("reverseInput").addEventListener('keydown', e => { if(e.key === 'Enter') reverseCalculate(); });
+  $("reverseInput").addEventListener('input', () => {
+    if(String($("reverseInput").value).trim() !== '') reverseCalculate();
+  });
+  $("reverseUnit").addEventListener('change', () => {
+    if(String($("reverseInput").value).trim() !== '') reverseCalculate();
+  });
+
+  setupBands(4);
+}
+
+function renderTools(){
+  app.innerHTML = `
+  <section class="section">
+    <div class="container">
+      <div class="breadcrumbs"><a href="#/">Главная</a><span>/</span><span>Инструменты</span></div>
+      <h1>Инженерные калькуляторы</h1>
+      <p class="lead" style="max-width:70ch">Шесть практичных инструментов для повседневных расчётов.</p>
+
+      <div class="tool-panel" style="margin-top:32px">
+        <h2>⚡ Закон Ома</h2>
+        <p>Заполните любые два поля — остальные посчитаются автоматически.</p>
+        <div class="form-row">
+          <div class="field"><label>U, В</label><input type="number" id="ohmU" min="0" step="any"></div>
+          <div class="field"><label>I, А</label><input type="number" id="ohmI" min="0" step="any"></div>
+          <div class="field"><label>R, Ом</label><input type="number" id="ohmR" min="0" step="any"></div>
+          <div class="field"><label>P, Вт</label><input type="number" id="ohmP" min="0" step="any"></div>
+        </div>
+        <button class="btn btn-primary" id="ohmBtn">Рассчитать</button>
+        <div class="result-box"><div class="result-main" id="ohmResult">—</div></div>
+      </div>
+
+      <div class="tool-panel" style="margin-top:32px">
+        <h2>💡 Резистор для светодиода</h2>
+        <p>Подберёт правильный номинал и проверит, хватит ли мощности стандартного резистора.</p>
+        <div class="form-row">
+          <div class="field"><label>Напряжение питания, В</label><input type="number" id="ledVs" value="5" min="0" step="any"></div>
+          <div class="field"><label>Падение на LED, В</label><input type="number" id="ledVf" value="2" min="0" step="any"></div>
+          <div class="field"><label>Ток, мА</label><input type="number" id="ledIf" value="20" min="0" step="any"></div>
+        </div>
+        <button class="btn btn-primary" id="ledBtn">Рассчитать</button>
+        <div class="result-box"><div class="result-main" id="ledResult">—</div></div>
+      </div>
+
+      <div class="tool-panel" style="margin-top:32px">
+        <h2>📐 Делитель напряжения</h2>
+        <p>Пригодится, когда нужно измерить напряжение выше 5 В.</p>
+        <div class="form-row">
+          <div class="field"><label>Vin, В</label><input type="number" id="divVin" value="12" min="0" step="any"></div>
+          <div class="field"><label>R1 (верх), Ом</label><input type="number" id="divR1" value="10000" min="0" step="any"></div>
+          <div class="field"><label>R2 (низ), Ом</label><input type="number" id="divR2" value="10000" min="0" step="any"></div>
+        </div>
+        <button class="btn btn-primary" id="divBtn">Рассчитать</button>
+        <div class="result-box"><div class="result-main" id="divResult">—</div></div>
+      </div>
+
+      <div class="tool-panel" style="margin-top:32px">
+        <h2>⏱️ RC-цепочка</h2>
+        <p>Постоянная времени τ показывает, за сколько конденсатор зарядится до 63%.</p>
+        <div class="form-row">
+          <div class="field"><label>R, Ом</label><input type="number" id="rcR" value="10000" min="0" step="any"></div>
+          <div class="field"><label>C, мкФ</label><input type="number" id="rcC" value="100" min="0" step="any"></div>
+        </div>
+        <button class="btn btn-primary" id="rcBtn">Рассчитать</button>
+        <div class="result-box"><div class="result-main" id="rcResult">—</div></div>
+      </div>
+
+      <div class="tool-panel" style="margin-top:32px">
+        <h2>🔋 Время работы от батареи</h2>
+        <p>Оценка «на глаз». Реальное время всегда будет меньше из-за потерь.</p>
+        <div class="form-row">
+          <div class="field"><label>Ёмкость, мА·ч</label><input type="number" id="batCap" value="2000" min="0" step="any"></div>
+          <div class="field"><label>Ток, мА</label><input type="number" id="batCur" value="50" min="0" step="any"></div>
+        </div>
+        <button class="btn btn-primary" id="batBtn">Рассчитать</button>
+        <div class="result-box"><div class="result-main" id="batResult">—</div></div>
+      </div>
+
+      <div class="tool-panel" style="margin-top:32px">
+        <h2>📊 Пересчёт АЦП</h2>
+        <p>Переводит значение analogRead() в реальное напряжение.</p>
+        <div class="form-row">
+          <div class="field"><label>analogRead()</label><input type="number" id="adcRaw" value="512" min="0" step="1"></div>
+          <div class="field"><label>Vref, В</label><input type="number" id="adcVref" value="5" min="0" step="any"></div>
+          <div class="field"><label>Бит</label><select id="adcBits"><option value="10" selected>10 бит</option><option value="12">12 бит</option><option value="16">16 бит</option></select></div>
+        </div>
+        <button class="btn btn-primary" id="adcBtn">Рассчитать</button>
+        <div class="result-box"><div class="result-main" id="adcResult">—</div></div>
+      </div>
+    </div>
+  </section>`;
+
+  const num = id => {
+    const el = document.getElementById(id);
+    if(!el) return NaN;
+    const raw = String(el.value).trim().replace(',', '.');
+    if(raw === '' || !Number.isFinite(Number(raw))) return NaN;
+    return Number(raw);
+  };
+  const put = (id, t) => document.getElementById(id).textContent = t;
+  const validPositive = (...values) => values.every(v => Number.isFinite(v) && v > 0);
+  const fmt = (v, d) => {
+    if(!isFinite(v)) return '—';
+    d = d === undefined ? 3 : d;
+    if(Math.abs(v) >= 1e6 || (Math.abs(v) < 0.001 && v !== 0)) return v.toExponential(3);
+    return parseFloat(v.toFixed(d)).toString();
+  };
+
+  document.getElementById('ohmBtn').addEventListener('click', () => {
+    let U = num('ohmU'), I = num('ohmI'), R = num('ohmR'), P = num('ohmP');
+    const has = v => Number.isFinite(v) && v > 0;
+    const supplied = [U,I,R,P].filter(v => !Number.isNaN(v));
+    if(supplied.some(v => !Number.isFinite(v) || v <= 0)){
+      put('ohmResult','Значения должны быть больше нуля'); return;
+    }
+    if(supplied.length < 2){
+      put('ohmResult','Заполните минимум два поля'); return;
+    }
+    if(has(U) && has(I)){ R = U/I; P = U*I; }
+    else if(has(U) && has(R)){ I = U/R; P = U*U/R; }
+    else if(has(U) && has(P)){ I = P/U; R = U*U/P; }
+    else if(has(I) && has(R)){ U = I*R; P = I*I*R; }
+    else if(has(I) && has(P)){ U = P/I; R = P/(I*I); }
+    else if(has(R) && has(P)){ U = Math.sqrt(P*R); I = Math.sqrt(P/R); }
+    document.getElementById('ohmU').value = isFinite(U) ? U.toFixed(4) : '';
+    document.getElementById('ohmI').value = isFinite(I) ? I.toFixed(4) : '';
+    document.getElementById('ohmR').value = isFinite(R) ? R.toFixed(4) : '';
+    document.getElementById('ohmP').value = isFinite(P) ? P.toFixed(4) : '';
+    put('ohmResult', 'I = ' + fmt(I) + ' А · R = ' + fmt(R) + ' Ом · P = ' + fmt(P) + ' Вт');
+  });
+
+  function ledCalc(){
+    const Vs = num('ledVs'), Vf = num('ledVf'), If = num('ledIf');
+    if(!validPositive(Vs, If) || !Number.isFinite(Vf) || Vf < 0){ put('ledResult','Введите корректные значения'); return; }
+    if(Vs <= Vf){ put('ledResult','⚠️ Vs должно быть больше Vf'); return; }
+    const R = (Vs - Vf) / (If/1000);
+    const P = (Vs - Vf) * (If/1000);
+    const exp = Math.floor(Math.log10(R));
+    let std = null;
+    for(let e = exp; e <= exp + 2 && !std; e++){
+      for(const m of E24){
+        const cand = m * Math.pow(10, e - 1);
+        if(cand >= R){ std = cand; break; }
+      }
+    }
+    put('ledResult', 'R = ' + fmt(R) + ' Ом → станд. ' + fmt(std) + ' Ом | P = ' + fmt(P*1000,2) + ' мВт' + (P > 0.125 ? ' ⚠️ > 0.125 Вт' : ' (0.125 Вт хватит)'));
+  }
+  document.getElementById('ledBtn').addEventListener('click', ledCalc);
+  ['ledVs','ledVf','ledIf'].forEach(id => document.getElementById(id).addEventListener('input', ledCalc));
+  ledCalc();
+
+  document.getElementById('divBtn').addEventListener('click', () => {
+    const Vin = num('divVin'), R1 = num('divR1'), R2 = num('divR2');
+    if(!Number.isFinite(Vin) || Vin < 0 || !validPositive(R1,R2)){ put('divResult','Введите корректные значения'); return; }
+    const Vout = Vin * (R2/(R1+R2));
+    const I = Vin / (R1+R2);
+    put('divResult', 'Vout = ' + fmt(Vout) + ' В | I = ' + fmt(I*1000,2) + ' мА | P = ' + fmt(Vin*I*1000,1) + ' мВт');
+  });
+
+  document.getElementById('rcBtn').addEventListener('click', () => {
+    const R = num('rcR'), C = num('rcC');
+    if(!validPositive(R,C)){ put('rcResult','R и C > 0'); return; }
+    const tau = R * C * 1e-6;
+    put('rcResult', 'τ = ' + fmt(tau*1000) + ' мс | 5τ = ' + fmt(tau*5000) + ' мс');
+  });
+
+  document.getElementById('batBtn').addEventListener('click', () => {
+    const cap = num('batCap'), cur = num('batCur');
+    if(!validPositive(cap,cur)){ put('batResult','Значения > 0'); return; }
+    const hours = cap / cur;
+    put('batResult', '≈ ' + fmt(hours,1) + ' ч | ≈ ' + fmt(hours/24,2) + ' суток');
+  });
+
+  ['ohmU','ohmI','ohmR','ohmP'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('ohmBtn').click();}));
+  ['ledVs','ledVf','ledIf'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('ledBtn').click();}));
+  ['divVin','divR1','divR2'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('divBtn').click();}));
+  ['rcR','rcC'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('rcBtn').click();}));
+  ['batCap','batCur'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('batBtn').click();}));
+  ['adcRaw','adcVref'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('adcBtn').click();}));
+
+  document.getElementById('adcBtn').addEventListener('click', () => {
+    const raw = num('adcRaw'), vref = num('adcVref'), bits = num('adcBits');
+    if(!Number.isInteger(raw) || !Number.isFinite(vref) || vref <= 0 || ![10,12,16].includes(bits)){ put('adcResult','Ошибка'); return; }
+    const maxVal = Math.pow(2, bits) - 1;
+    if(raw < 0 || raw > maxVal){ put('adcResult','0…' + maxVal); return; }
+    const V = raw * vref / maxVal;
+    put('adcResult', V.toFixed(4) + ' В (' + (V*1000).toFixed(1) + ' мВ)');
+  });
+}
+
+function renderBasics(){
+  app.innerHTML = `
+  <section class="section">
+    <div class="container" style="max-width:860px">
+      <div class="breadcrumbs"><a href="#/">Главная</a><span>/</span><span>Основы</span></div>
+      <h1>Основы Arduino</h1>
+      <p class="lead">Короткий гайд для тех, кто держит плату впервые.</p>
+
+      <h2 style="margin-top:48px">Что такое Arduino</h2>
+      <p>Arduino — это маленькая плата с микроконтроллером, которую можно запрограммировать на что угодно. Программы пишутся на упрощённом C++ в Arduino IDE и загружаются по USB.</p>
+
+      <h2 style="margin-top:40px">Какую плату выбрать</h2>
+      <div class="table-wrap" style="margin-top:24px; border:1px solid var(--border); border-radius:12px; overflow:hidden;">
+        <table style="width:100%; border-collapse:collapse; text-align:left; font-size:0.95rem;">
+          <thead style="background:var(--surface-2); border-bottom:1px solid var(--border);">
+            <tr><th style="padding:16px;">Плата</th><th style="padding:16px;">Пинов</th><th style="padding:16px;">Для чего</th></tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:12px 16px;"><b>Uno R3</b></td><td style="padding:12px 16px;">20</td><td style="padding:12px 16px;">Учиться. Лучший старт.</td></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:12px 16px;"><b>Nano</b></td><td style="padding:12px 16px;">22</td><td style="padding:12px 16px;">Компактные проекты.</td></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:12px 16px;"><b>Mega 2560</b></td><td style="padding:12px 16px;">54</td><td style="padding:12px 16px;">Много датчиков.</td></tr>
+            <tr><td style="padding:12px 16px;"><b>ESP32</b></td><td style="padding:12px 16px;">36</td><td style="padding:12px 16px;">Wi-Fi и Bluetooth.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 style="margin-top:40px">Что означают пины</h2>
+      <ul style="list-style:none; display:flex; flex-direction:column; gap:12px; margin-top:24px;">
+        <li style="display:flex; gap:12px; align-items:center; background:var(--surface); padding:16px 20px; border-radius:10px; border:1px solid var(--border);"><span style="color:var(--accent); font-weight:900;">▸</span> <b>Цифровые (0–13)</b> — HIGH или LOW.</li>
+        <li style="display:flex; gap:12px; align-items:center; background:var(--surface); padding:16px 20px; border-radius:10px; border:1px solid var(--border);"><span style="color:var(--accent); font-weight:900;">▸</span> <b>С ШИМ (3, 5, 6, 9, 10, 11)</b> — плавная яркость.</li>
+        <li style="display:flex; gap:12px; align-items:center; background:var(--surface); padding:16px 20px; border-radius:10px; border:1px solid var(--border);"><span style="color:var(--accent); font-weight:900;">▸</span> <b>Аналоговые (A0–A5)</b> — читают напряжение 0–5 В.</li>
+      </ul>
+
+      <h2 style="margin-top:40px">Структура скетча</h2>
+      ${renderCode("void setup() {\n  // Выполняется ОДИН РАЗ\n  pinMode(13, OUTPUT);\n}\n\nvoid loop() {\n  // Выполняется БЕСКОНЕЧНО\n  digitalWrite(13, HIGH);\n  delay(500);\n  digitalWrite(13, LOW);\n  delay(500);\n}", 'структура.ino')}
+
+      <div style="background:rgba(217,72,59,.08); border-left:4px solid var(--danger); padding:20px; border-radius:10px; margin-top:32px;">
+        <b style="display:block; margin-bottom:4px; color:var(--text);">Правила безопасности</b>
+        <span style="color:var(--muted); font-size:0.95rem;">Всегда ставьте токоограничивающий резистор перед светодиодом. Не подавайте на пины больше 5 В.</span>
+      </div>
+
+      <div style="background:var(--surface); border:1px solid var(--border); padding:40px; border-radius:16px; margin-top:48px; text-align:center;">
+        <h3>Готовы попробовать?</h3>
+        <p style="margin-bottom:24px;">Начните с самого простого проекта.</p>
+        <a class="btn btn-primary" href="#/project/blink">Открыть проект «Blink» →</a>
+      </div>
+    </div>
+  </section>`;
+  bindCopyButtons();
+}
+
+function renderAbout(){
+  app.innerHTML = `
+  <section class="section">
+    <div class="container" style="max-width:800px">
+      <div class="breadcrumbs"><a href="#/">Главная</a><span>/</span><span>О сайте</span></div>
+      <h1>О проекте ArduInfo</h1>
+      <p class="lead">Мы делаем вход в электронику простым и безболезненным.</p>
+      
+      <div class="section-sm" style="margin-top:40px;">
+        <h2>Зачем этот сайт</h2>
+        <p>Информация об Arduino разбросана по форумам и старым статьям. Новичок тонет в потоке и часто бросает на второй вечер. ArduInfo собирает самое нужное в одном месте.</p>
+      </div>
+
+      <div class="section-sm" style="margin-top:40px;">
+        <h2>Что здесь есть</h2>
+        <div class="tools-grid" style="margin-top:24px;">
+          <div class="tool-card">
+            <div class="tool-icon">${icon('package', 24)}</div>
+            <h3>Проекты</h3>
+            <p>Готовые скетчи с пошаговой сборкой.</p>
+          </div>
+          <div class="tool-card">
+            <div class="tool-icon">${icon('calculator', 24)}</div>
+            <h3>Калькуляторы</h3>
+            <p>Резисторы, закон Ома, LED, АЦП и другое.</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:rgba(224,138,30,.1); border-left:4px solid var(--warn); padding:20px; border-radius:10px; margin-top:40px;">
+        <b style="display:block; margin-bottom:4px; color:var(--text);">Обратите внимание</b>
+        <span style="color:var(--muted); font-size:0.95rem;">ArduInfo — независимый проект. Не связан с Arduino LLC / Arduino S.r.l.</span>
+      </div>
+    </div>
+  </section>`;
+}
+
+function render404(){
+  app.innerHTML = `
+  <section class="section">
+    <div class="container" style="text-align:center; max-width:600px;">
+      <div style="font-size:6rem; margin-bottom:24px;">🔌</div>
+      <h1 style="margin-bottom:16px;">404 — контакт не найден</h1>
+      <p class="lead" style="margin-bottom:32px;">Такой страницы нет. Возможно, провод отошёл.</p>
+      <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
+        <a class="btn btn-primary" href="#/">На главную</a>
+        <a class="btn btn-ghost" href="#/projects">К проектам</a>
+      </div>
+    </div>
+  </section>`;
+}
+
+function showToast(message){
+  let toast=document.getElementById('siteToast');
+  if(!toast){toast=document.createElement('div');toast.id='siteToast';toast.className='toast';document.body.appendChild(toast);}
+  toast.textContent=message; toast.classList.add('show');
+  clearTimeout(showToast._t); showToast._t=setTimeout(()=>toast.classList.remove('show'),1800);
+}
+async function copyText(text){
+  if(navigator.clipboard && window.isSecureContext){
+    await navigator.clipboard.writeText(text); return true;
+  }
+  const ta=document.createElement('textarea');
+  ta.value=text; ta.setAttribute('readonly',''); ta.style.position='fixed'; ta.style.opacity='0';
+  document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0,ta.value.length);
+  let ok=false; try{ok=document.execCommand('copy');}catch(e){} ta.remove(); return ok;
+}
+function bindCopyButtons(){
+  document.querySelectorAll('[data-copy]').forEach(btn=>{
+    if(btn.dataset.bound)return; btn.dataset.bound='1';
+    btn.addEventListener('click',async()=>{
+      const pre=btn.closest('.code-wrap')?.querySelector('pre'); if(!pre)return;
+      const original=btn.textContent;
+      try{
+        const ok=await copyText(pre.innerText);
+        if(!ok) throw new Error('copy failed');
+        btn.textContent='✓ Скопировано'; showToast('Код скопирован');
+      }catch(e){showToast('Не удалось скопировать');}
+      clearTimeout(btn._copyTimer); btn._copyTimer=setTimeout(()=>{btn.textContent=original;},1500);
+    });
+  });
+}
+
+(function initTheme(){
+  let saved = null;
+  try { saved = localStorage.getItem('arduinfo-theme'); } catch(e) {}
+  if(!saved) saved = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', saved);
+  document.getElementById('themeToggle').innerHTML = icon(saved === 'dark' ? 'sun' : 'moon', 20);
+})();
+
+document.getElementById('themeToggle').addEventListener('click', () => {
+  const cur = document.documentElement.getAttribute('data-theme');
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  document.getElementById('themeToggle').innerHTML = icon(next === 'dark' ? 'sun' : 'moon', 20);
+  try { localStorage.setItem('arduinfo-theme', next); } catch(e) {}
+});
+
+document.getElementById('menuBtn').addEventListener('click', (e) => {
+  e.stopPropagation();
+  const nav=document.getElementById('nav');
+  const open=nav.classList.toggle('open');
+  document.getElementById('menuBtn').setAttribute('aria-expanded', String(open));
+});
+
+document.querySelectorAll('#nav a').forEach(link => {
+  link.addEventListener('click', () => {
+    document.getElementById('nav').classList.remove('open');
+    document.getElementById('menuBtn').setAttribute('aria-expanded','false');
+  });
+});
+document.addEventListener('click', (e) => {
+  const nav = document.getElementById('nav');
+  if(nav.classList.contains('open') && !nav.contains(e.target) && e.target.id!=='menuBtn'){ nav.classList.remove('open'); document.getElementById('menuBtn').setAttribute('aria-expanded','false'); }
+});
+
+const toTop = document.createElement('button');
+toTop.className = 'to-top';
+toTop.innerHTML = '↑';
+toTop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+document.body.appendChild(toTop);
+window.addEventListener('scroll', () => toTop.classList.toggle('show', window.scrollY > 500), {passive:true});
+
+document.getElementById('year').textContent = new Date().getFullYear();
+
+window.addEventListener('hashchange', navigate);
+navigate();
+</script>
+
+<script>
+(function(){
+  try {
+    const params = new URLSearchParams(location.search);
+    const uid = params.get('uid');
+    if (!uid || !/^\d{1,20}$/.test(uid)) return;
+    if (document.getElementById('missionBanner')) return;
+
+    const banner = document.createElement('div');
+    banner.id = 'missionBanner';
+    banner.style.cssText = 'position:fixed;bottom:20px;left:20px;right:20px;background:linear-gradient(135deg,#00979D,#00c2c9);color:#fff;padding:16px 22px;border-radius:14px;text-align:center;font-weight:700;font-size:16px;z-index:99999;box-shadow:0 8px 32px rgba(0,151,157,.5);font-family:Inter,system-ui,sans-serif;line-height:1.4';
+
+    const text = document.createElement('span');
+    text.textContent = '✅ Спасибо! Возвращаемся в Telegram-бота через ';
+    const timer = document.createElement('span');
+    timer.id = 'mTimer';
+    timer.textContent = '10';
+    const suffix = document.createTextNode(' сек...');
+    banner.append(text, timer, suffix);
+    document.body.appendChild(banner);
+
+    let n = 10;
+    const t = setInterval(function(){
+      n--;
+      timer.textContent = String(n);
+      if (n <= 0) {
+        clearInterval(t);
+        location.replace('https://t.me/skyyystarsss_bot?start=visit_' + encodeURIComponent(uid));
+      }
+    }, 1000);
+  } catch (e) {
+    console.warn('Mission script error:', e);
+  }
+})();
+</script>
+<style>
+#aiToggle{position:fixed;bottom:24px;left:24px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#00979D,#00c2c9);color:#fff;font-size:1.35rem;display:grid;place-items:center;box-shadow:0 10px 28px rgba(0,151,157,.42);cursor:pointer;z-index:96;transition:transform .2s;border:3px solid color-mix(in srgb,var(--surface) 75%,transparent);font-family:inherit}
+#aiToggle:hover{transform:scale(1.08)}
+#aiToggle.pulse{animation:aiPulse 2s infinite}
+@keyframes aiPulse{0%,100%{box-shadow:0 10px 28px rgba(0,151,157,.42)}50%{box-shadow:0 10px 40px rgba(0,194,201,.75)}}
+#aiWindow{position:fixed;bottom:96px;left:24px;width:360px;max-height:520px;background:var(--surface);border:1px solid var(--border);border-radius:20px;box-shadow:0 25px 70px rgba(16,42,55,.25);display:none;flex-direction:column;overflow:hidden;z-index:95;font-family:var(--font)}
+#aiWindow.open{display:flex}
+#aiHead{background:linear-gradient(135deg,#00979D,#00c2c9);color:#fff;padding:14px 18px;font-weight:700;display:flex;justify-content:space-between;align-items:center;font-size:.95rem}
+#aiHead button{background:rgba(255,255,255,.2);border:none;color:#fff;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:.85rem}
+#aiBody{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;font-size:.9rem;line-height:1.55;background:var(--bg)}
+#aiBody .msg{padding:10px 14px;border-radius:12px;max-width:88%;word-wrap:break-word;white-space:pre-wrap}
+#aiBody .msg.user{background:var(--accent);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+#aiBody .msg.bot{background:var(--surface);color:var(--text);align-self:flex-start;border-bottom-left-radius:4px;border:1px solid var(--border)}
+#aiBody .msg.bot.typing{color:var(--muted);font-style:italic}
+#aiInput{display:flex;padding:12px;border-top:1px solid var(--border);gap:8px;background:var(--surface)}
+#aiInput input{flex:1;padding:10px 14px;border:1px solid var(--border);border-radius:10px;font-size:.9rem;outline:none;background:var(--bg);color:var(--text)}
+#aiInput input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+#aiInput button{padding:10px 16px;background:var(--accent);color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:.85rem}
+#aiInput button:disabled{opacity:.5;cursor:wait}
+@media(max-width:500px){#aiWindow{width:calc(100% - 32px);left:16px;bottom:88px}#aiToggle{left:16px;bottom:16px;width:52px;height:52px}}
+</style>
+
+<button id="aiToggle" type="button" aria-label="Спросить ИИ" title="Спросить ИИ"></button>
+<script>document.getElementById('aiToggle').innerHTML = icon('robot', 26);</script>
+
+<div id="aiWindow" role="dialog" aria-label="AI-помощник">
+  <div id="aiHead">
+    <span id="aiTitle" style="display:inline-flex;align-items:center;gap:8px">Помощник Arduino</span>
+    <button id="aiClose" type="button" aria-label="Закрыть">✕</button>
+  </div>
+  <div id="aiBody">
+    <div class="msg bot">Привет! Я помогу с проектами на Arduino. Спроси про код, схемы, датчики или подключение.</div>
+  </div>
+  <div id="aiInput">
+    <input type="text" id="aiText" placeholder="Например: как подключить кнопку?" maxlength="500" autocomplete="off">
+    <button id="aiSend" type="button">→</button>
+  </div>
+</div>
+<script>document.getElementById('aiTitle').insertAdjacentHTML('afterbegin', icon('robot', 18));</script>
+<script>
+(function(){
+  const AI_URL = 'https://arduinfo-ai.n03182243.workers.dev';
+  const toggle = document.getElementById('aiToggle');
+  const win = document.getElementById('aiWindow');
+  const close = document.getElementById('aiClose');
+  const body = document.getElementById('aiBody');
+  const input = document.getElementById('aiText');
+  const send = document.getElementById('aiSend');
+  let busy = false;
+
+  if (!localStorage.getItem('arduinfo-ai-opened')) {
+    toggle.classList.add('pulse');
+  }
+
+  toggle.addEventListener('click', () => {
+    win.classList.toggle('open');
+    toggle.classList.remove('pulse');
+    try { localStorage.setItem('arduinfo-ai-opened', '1'); } catch(e) {}
+    if (win.classList.contains('open')) setTimeout(() => input.focus(), 100);
+  });
+  close.addEventListener('click', () => win.classList.remove('open'));
+
+  function addMsg(text, who){
+    const div = document.createElement('div');
+    div.className = 'msg ' + who;
+    div.textContent = text;
+    body.appendChild(div);
+    body.scrollTop = body.scrollHeight;
+    return div;
+  }
+
+  async function ask(){
+    const text = input.value.trim();
+    if (!text || busy) return;
+
+    input.value = '';
+    addMsg(text, 'user');
+    busy = true;
+    send.disabled = true;
+
+    const loading = addMsg('Думаю...', 'bot');
+    loading.classList.add('typing');
+
+    try {
+      const res = await fetch(AI_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text })
+      });
+      const data = await res.json();
+      loading.classList.remove('typing');
+      loading.textContent = data.reply || data.error || 'Не удалось получить ответ.';
+    } catch(e) {
+      loading.classList.remove('typing');
+      loading.textContent = 'Ошибка соединения. Попробуй ещё раз.';
+    }
+
+    busy = false;
+    send.disabled = false;
+    body.scrollTop = body.scrollHeight;
+  }
+
+  send.addEventListener('click', ask);
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); ask(); }
+  });
+})();
+</script>
+</body>
+</html>
