@@ -99,7 +99,7 @@ p{margin-bottom:1em;color:var(--muted)}
 }
 
 /* =========================================================
-   КНОПКИ (Возвращаем градиенты и скругления)
+   КНОПКИ
    ========================================================= */
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:8px;
@@ -126,7 +126,7 @@ p{margin-bottom:1em;color:var(--muted)}
 }
 
 /* =========================================================
-   ГЛАВНЫЙ ЭКРАН (Перекомпоновка: Асимметрия)
+   ГЛАВНЫЙ ЭКРАН
    ========================================================= */
 .hero {
   padding: 80px 0 60px;
@@ -135,12 +135,10 @@ p{margin-bottom:1em;color:var(--muted)}
 }
 .hero-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr; /* 50/50 */
+  grid-template-columns: 1fr 1fr;
   gap: 60px;
   align-items: center;
 }
-
-/* Левая часть: Текст + Бейдж */
 .hero-badge {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 6px 14px; border-radius: 30px;
@@ -151,8 +149,6 @@ p{margin-bottom:1em;color:var(--muted)}
 .hero h1 { margin-bottom: 20px; line-height: 1.1; }
 .hero h1 span { color: var(--accent); }
 .hero p { font-size: 1.15rem; margin-bottom: 32px; max-width: 45ch; }
-
-/* Статы в ряд, но с вертикальными линиями */
 .hero-stats {
   display: flex; gap: 32px; margin-top: 40px; padding-top: 24px;
   border-top: 1px solid var(--border);
@@ -160,8 +156,6 @@ p{margin-bottom:1em;color:var(--muted)}
 .hero-stat { display: flex; flex-direction: column; gap: 4px; }
 .hero-stat b { font-size: 1.8rem; font-weight: 900; color: var(--text); line-height: 1; }
 .hero-stat span { font-size: 0.85rem; color: var(--muted); font-weight: 500; }
-
-/* Правая часть: Код (терминал) */
 .hero-art {
   background: var(--code-bg);
   border-radius: 16px;
@@ -183,7 +177,6 @@ p{margin-bottom:1em;color:var(--muted)}
 .hero-art-body {
   padding: 24px; font-family: var(--mono); font-size: 0.9rem; line-height: 1.7; color: var(--code-text);
 }
-
 @media(max-width: 900px) {
   .hero-grid { grid-template-columns: 1fr; gap: 40px; }
   .hero-art { transform: none; }
@@ -191,14 +184,13 @@ p{margin-bottom:1em;color:var(--muted)}
 }
 
 /* =========================================================
-   СЕКЦИИ И СЕТКИ (Перекомпоновка)
+   СЕКЦИИ И СЕТКИ
    ========================================================= */
 .section { padding: 80px 0; }
 .section-head { margin-bottom: 40px; }
 .section-head h2 { font-size: 1.8rem; font-weight: 800; margin-bottom: 8px; }
 .section-head p { font-size: 1.05rem; color: var(--muted); max-width: 60ch; margin: 0; }
 
-/* --- Быстрые инструменты (Сдвиг сетки) --- */
 .tools-grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -229,7 +221,6 @@ p{margin-bottom:1em;color:var(--muted)}
 .tool-card .arrow { font-size: 1.2rem; color: var(--accent); opacity: 0; transform: translateX(-10px); transition: all 0.2s; margin-top: auto; }
 .tool-card:hover .arrow { opacity: 1; transform: translateX(0); }
 
-/* --- Проекты (Разноуровневая сетка) --- */
 .projects-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -252,7 +243,6 @@ p{margin-bottom:1em;color:var(--muted)}
   display: flex; gap: 8px; flex-wrap: wrap; padding-top: 16px; border-top: 1px solid var(--border); margin-top: auto;
 }
 
-/* --- Почему ArduInfo (Горизонтальные полосы вместо карточек) --- */
 .features-list {
   display: flex; flex-direction: column; gap: 0;
   border: 1px solid var(--border); border-radius: 16px; background: var(--surface); overflow: hidden;
@@ -270,7 +260,6 @@ p{margin-bottom:1em;color:var(--muted)}
 .feature-text h3 { font-size: 1.1rem; margin-bottom: 4px; }
 .feature-text p { font-size: 0.95rem; color: var(--muted); margin: 0; }
 
-/* Адаптив */
 @media(max-width: 1024px) {
   .tools-grid { grid-template-columns: 1fr 1fr; }
   .projects-grid { grid-template-columns: 1fr 1fr; }
@@ -312,7 +301,7 @@ p{margin-bottom:1em;color:var(--muted)}
 }
 
 /* =========================================================
-   ПРОЧИЕ СТРАНИЦЫ (Списки, Калькуляторы, Код)
+   ПРОЧИЕ СТРАНИЦЫ
    ========================================================= */
 .breadcrumbs { font-size: 0.85rem; color: var(--muted); margin-bottom: 24px; display: flex; gap: 8px; align-items: center; }
 .breadcrumbs span { opacity: 0.5; }
@@ -340,7 +329,6 @@ p{margin-bottom:1em;color:var(--muted)}
 .copy-btn { color: #fff; background: var(--accent); border-radius: 6px; padding: 6px 12px; font-size: 0.8rem; font-weight: 600; }
 pre { padding: 24px; overflow-x: auto; font-family: var(--mono); font-size: 0.9rem; line-height: 1.6; color: var(--code-text); }
 
-/* Стили для резистора */
 .resistor-visual{display:flex;align-items:center;justify-content:center;padding:40px 10px}
 .r-lead{width:60px;height:4px;background:linear-gradient(180deg,#c8d3da,#98a8b3);border-radius:2px}
 .r-body{display:flex;align-items:center;justify-content:center;gap:9px;width:220px;height:70px;border-radius:35px/50%;background:linear-gradient(180deg,#f5e6cc 0%,#d4b574 50%,#8a6b35 100%);box-shadow:inset 0 4px 8px rgba(255,255,255,0.6),inset 0 -4px 8px rgba(0,0,0,0.4),0 10px 20px rgba(0,0,0,0.2);padding:0 16px;position:relative}
@@ -366,6 +354,7 @@ pre { padding: 24px; overflow-x: auto; font-family: var(--mono); font-size: 0.9r
       <a href="#/tools">Инструменты</a>
       <a href="#/resistor">Резисторы</a>
       <a href="#/basics">Основы</a>
+      <a href="errors.html">Ошибки</a> <!-- ССЫЛКА НА БАЗУ ОШИБОК -->
       <a href="#/about">О сайте</a>
     </nav>
     <div class="header-actions">
@@ -391,6 +380,7 @@ pre { padding: 24px; overflow-x: auto; font-family: var(--mono); font-size: 0.9r
           <li><a href="#/tools">Инструменты</a></li>
           <li><a href="#/resistor">Калькулятор резисторов</a></li>
           <li><a href="#/basics">Основы</a></li>
+          <li><a href="errors.html">База ошибок</a></li> <!-- ССЫЛКА -->
         </ul>
       </div>
       <div class="footer-col">
@@ -443,30 +433,6 @@ const PROJECTS = [
     code:`// Проект 2: Кнопка + светодиод\nconst int BUTTON_PIN = 2;\nconst int LED_PIN    = 13;\n\nvoid setup() {\n  pinMode(LED_PIN, OUTPUT);\n  pinMode(BUTTON_PIN, INPUT_PULLUP);\n  Serial.begin(9600);\n}\n\nvoid loop() {\n  int state = digitalRead(BUTTON_PIN);\n  if (state == LOW) {\n    digitalWrite(LED_PIN, HIGH);\n    Serial.println("Кнопка нажата");\n  } else {\n    digitalWrite(LED_PIN, LOW);\n  }\n  delay(20);\n}`,
     tips:['INPUT_PULLUP — внешний резистор не нужен.','Резистор 220 Ом обязателен для LED.','delay(20) защищает от дребезга.']
   },
-  { id:'traffic-light', title:'Светофор на трёх светодиодах', level:'Новичок', category:'Основы', time:'25 минут', icon:'traffic',
-    short:'Собираем мини-светофор и учимся работать с массивами.',
-    description:'Отличный проект для закрепления работы с несколькими выходами.',
-    components:['Arduino Uno','3 светодиода','3 резистора 220 Ом','Провода'],
-    steps:[
-      {t:'Подключите светодиоды',d:'Красный → 8, жёлтый → 9, зелёный → 10 через резисторы на GND.'},
-      {t:'Загрузите код',d:'Скетч использует массив пинов и цикл for.'},
-      {t:'Настройте тайминги',d:'Поменяйте задержки под себя.'}
-    ],
-    code:`// Проект 3: Светофор\nconst int RED    = 8;\nconst int YELLOW = 9;\nconst int GREEN  = 10;\n\nvoid setup() {\n  pinMode(RED, OUTPUT);\n  pinMode(YELLOW, OUTPUT);\n  pinMode(GREEN, OUTPUT);\n}\n\nvoid allOff() {\n  digitalWrite(RED, LOW);\n  digitalWrite(YELLOW, LOW);\n  digitalWrite(GREEN, LOW);\n}\n\nvoid loop() {\n  allOff(); digitalWrite(RED, HIGH);    delay(3000);\n  allOff(); digitalWrite(YELLOW, HIGH); delay(1000);\n  allOff(); digitalWrite(GREEN, HIGH);  delay(3000);\n  allOff(); digitalWrite(YELLOW, HIGH); delay(1000);\n}`,
-    tips:['Функция allOff() убирает дублирование.','Добавьте кнопку для пешеходов.','Замените delay() на millis() для реалистичности.']
-  },
-  { id:'fade-led', title:'Плавное затухание светодиода (PWM)', level:'Новичок', category:'Основы', time:'15 минут', icon:'fade',
-    short:'Используем ШИМ, чтобы плавно менять яркость светодиода.',
-    description:'ШИМ работает на пинах 3, 5, 6, 9, 10, 11 (помечены ~). analogWrite() принимает значения от 0 до 255.',
-    components:['Arduino Uno','Светодиод','Резистор 220 Ом','Провода'],
-    steps:[
-      {t:'Подключите светодиод',d:'Анод через резистор на пин 9, катод на GND.'},
-      {t:'Загрузите скетч',d:'LED плавно разгорается и гаснет.'},
-      {t:'Поэкспериментируйте',d:'Попробуйте шаг 5 и задержку 30 мс.'}
-    ],
-    code:`// Проект 4: Плавное затухание (PWM)\nconst int LED_PIN = 9;\n\nvoid setup() {\n  pinMode(LED_PIN, OUTPUT);\n}\n\nvoid loop() {\n  for (int b = 0; b <= 255; b += 5) {\n    analogWrite(LED_PIN, b);\n    delay(30);\n  }\n  for (int b = 255; b >= 0; b -= 5) {\n    analogWrite(LED_PIN, b);\n    delay(30);\n  }\n}`,
-    tips:['analogWrite() только на пинах с ~.','ШИМ-частота на Uno ~490 Гц.','Тот же приём для моторов и ламп.']
-  },
   { id:'ultrasonic', title:'Дальномер на HC-SR04', level:'Средний', category:'Датчики', time:'35 минут', icon:'radar',
     short:'Измеряем расстояние ультразвуком.',
     description:'HC-SR04 посылает импульс и измеряет время до эха. Скорость звука 343 м/с.',
@@ -503,42 +469,6 @@ const PROJECTS = [
     code:`// Проект 7: Сервопривод\n#include <Servo.h>\nServo myServo;\n\nvoid setup() { myServo.attach(9); }\n\nvoid loop() {\n  for (int a = 0; a <= 180; a++) { myServo.write(a); delay(15); }\n  for (int a = 180; a >= 0; a--) { myServo.write(a); delay(15); }\n}`,
     tips:['Мощные сервы — от внешнего БП.','GND БП и Arduino соединить.','writeMicroseconds() для точности.']
   },
-  { id:'buzzer', title:'Мелодия на пьезоизлучателе', level:'Новичок', category:'Звук', time:'25 минут', icon:'music',
-    short:'Играем мелодию функцией tone().',
-    description:'Пьезо превращает колебания в звук. tone() генерирует частоту.',
-    components:['Arduino Uno','Пьезоизлучатель','Провода'],
-    steps:[
-      {t:'Подключите',d:'Плюс на пин 8, минус на GND.'},
-      {t:'Загрузите',d:'Arduino сыграет Happy Birthday.'},
-      {t:'Настройте темп',d:'tempo влияет на длительность.'}
-    ],
-    code:`// Проект 8: Мелодия\nconst int BUZZER = 8;\n#define NOTE_C4 262\n#define NOTE_D4 294\n#define NOTE_E4 330\n#define NOTE_F4 349\n#define NOTE_G4 392\n\nint melody[] = {NOTE_C4,NOTE_C4,NOTE_D4,NOTE_C4,NOTE_F4,NOTE_E4};\nint durations[] = {4,4,4,4,4,2};\nconst int tempo = 120;\n\nvoid setup() { pinMode(BUZZER, OUTPUT); }\n\nvoid loop() {\n  int notes = sizeof(melody) / sizeof(melody[0]);\n  int wholenote = (60000 * 4) / tempo;\n  for (int i = 0; i < notes; i++) {\n    int nd = wholenote / durations[i];\n    tone(BUZZER, melody[i], nd * 0.9);\n    delay(nd);\n    noTone(BUZZER);\n  }\n  delay(3000);\n}`,
-    tips:['tone() работает на любом пине.','Конфликт с ШИМ на пинах 3 и 11.','Пассивный buzzer играет мелодии.']
-  },
-  { id:'photoresistor', title:'Автоматический ночник', level:'Средний', category:'Датчики', time:'30 минут', icon:'moon',
-    short:'Светодиод включается, когда темно.',
-    description:'Фоторезистор + резистор = делитель напряжения. Читаем аналоговым входом.',
-    components:['Arduino Uno','Фоторезистор GL5528','Резистор 10 кОм','Светодиод','Резистор 220 Ом'],
-    steps:[
-      {t:'Соберите делитель',d:'Один вывод → 5V, второй → A0 и через 10 кОм → GND.'},
-      {t:'Подключите LED',d:'Через 220 Ом на пин 9.'},
-      {t:'Откалибруйте',d:'Посмотрите значения днём и ночью, впишите порог.'}
-    ],
-    code:`// Проект 9: Ночник\nconst int LDR_PIN = A0;\nconst int LED_PIN = 9;\nconst int THRESHOLD = 400;\n\nvoid setup() {\n  pinMode(LED_PIN, OUTPUT);\n  Serial.begin(9600);\n}\n\nvoid loop() {\n  int light = analogRead(LDR_PIN);\n  Serial.print("Свет: "); Serial.println(light);\n  if (light < THRESHOLD) analogWrite(LED_PIN, 255);\n  else analogWrite(LED_PIN, 0);\n  delay(100);\n}`,
-    tips:['analogRead() от 0 до 1023.','Темнее — выше сопротивление.','Гистерезис уберёт дрожание.']
-  },
-  { id:'rgb-led', title:'RGB-светодиод: все цвета радуги', level:'Новичок', category:'Основы', time:'20 минут', icon:'rainbow',
-    short:'Смешиваем 3 канала ШИМ — любой цвет.',
-    description:'Три кристалла: R, G, B. Меняя яркость каждого — 16,7 млн оттенков.',
-    components:['Arduino Uno','RGB-светодиод','3 резистора 220 Ом'],
-    steps:[
-      {t:'Подключите',d:'Красный → 9, зелёный → 10, синий → 11 через резисторы. Общий катод → GND.'},
-      {t:'Загрузите',d:'LED переливается всеми цветами.'},
-      {t:'Свой цвет',d:'setColor(r,g,b) со своими значениями.'}
-    ],
-    code:`// Проект 10: RGB\nconst int R = 9, G = 10, B = 11;\n\nvoid setup() {\n  pinMode(R, OUTPUT); pinMode(G, OUTPUT); pinMode(B, OUTPUT);\n}\n\nvoid setColor(int r, int g, int b) {\n  analogWrite(R, r); analogWrite(G, g); analogWrite(B, b);\n}\n\nvoid loop() {\n  setColor(255, 0, 0); delay(500);\n  setColor(0, 255, 0); delay(500);\n  setColor(0, 0, 255); delay(500);\n  setColor(255, 255, 0); delay(500);\n  setColor(0, 255, 255); delay(500);\n  setColor(255, 0, 255); delay(500);\n  setColor(255, 255, 255); delay(500);\n}`,
-    tips:['Общий анод — логика инвертирована.','3 резистора обязательны.','Для лент WS2812 — FastLED.']
-  },
   { id:'lcd1602', title:'Дисплей 1602 I2C', level:'Средний', category:'Дисплеи', time:'35 минут', icon:'monitor',
     short:'Выводим текст на LCD через 2 линии I2C.',
     description:'Модуль I2C — всего 4 провода. Библиотека LiquidCrystal_I2C упрощает вывод.',
@@ -550,20 +480,9 @@ const PROJECTS = [
     ],
     code:`// Проект 11: LCD 1602 I2C\n#include <Wire.h>\n#include <LiquidCrystal_I2C.h>\n\nLiquidCrystal_I2C lcd(0x27, 16, 2);\n\nvoid setup() {\n  lcd.init();\n  lcd.backlight();\n  lcd.setCursor(0, 0); lcd.print("   ArduInfo    ");\n  lcd.setCursor(0, 1); lcd.print("  Привет, мир!  ");\n}\n\nvoid loop() {\n  lcd.setCursor(0, 1);\n  lcd.print("Uptime: ");\n  lcd.print(millis() / 1000);\n  lcd.print(" s   ");\n  delay(500);\n}`,
     tips:['Пустой экран — крутите контраст.','setCursor(столбец, строка).','Пробелы стирают старые символы.']
-  },
-  { id:'ir-remote', title:'Управление ИК-пультом', level:'Средний', category:'Датчики', time:'30 минут', icon:'remote',
-    short:'Принимаем сигналы от бытового пульта.',
-    description:'ИК-приёмник TSOP1838 декодирует сигналы. Библиотека IRremote получает код кнопки.',
-    components:['Arduino Uno','ИК-приёмник TSOP1838','Пульт'],
-    steps:[
-      {t:'Подключите',d:'VCC → 5V, GND → GND, OUT → 2.'},
-      {t:'Установите библиотеку',d:'«IRremote» by Armin Joachimsmeyer.'},
-      {t:'Считайте коды',d:'Нажимайте кнопки, записывайте коды.'}
-    ],
-    code:`// Проект 12: ИК-пульт\n#include <IRremote.hpp>\nconst int IR_PIN = 2;\n\nvoid setup() {\n  Serial.begin(9600);\n  IrReceiver.begin(IR_PIN, ENABLE_LED_FEEDBACK);\n}\n\nvoid loop() {\n  if (IrReceiver.decode()) {\n    Serial.print("Код: 0x");\n    Serial.println(IrReceiver.decodedIRData.decodedRawData, HEX);\n    IrReceiver.resume();\n  }\n}`,
-    tips:['Коды разных пультов отличаются.','Без препятствий до пульта.','Солнце содержит ИК и мешает.']
   }
 ];
+
 const CATEGORIES = ['Все','Основы','Датчики','Моторы','Звук','Дисплеи'];
 const HL_KEYWORDS = ['void','int','long','float','double','char','bool','boolean','byte','word','unsigned','signed','const','static','volatile','if','else','for','while','do','switch','case','default','break','continue','return','struct','class','new','delete','sizeof','true','false','HIGH','LOW','INPUT','OUTPUT','INPUT_PULLUP','LED_BUILTIN','String'];
 const HL_FUNCS = ['pinMode','digitalWrite','digitalRead','analogRead','analogWrite','delay','delayMicroseconds','millis','micros','map','constrain','tone','noTone','pulseIn','random','randomSeed','Serial','setup','loop','begin','print','println','write','read','available','isnan','min','max','abs','pow','sqrt','myServo','attach','setCursor','init','backlight','lcd','dht','IrReceiver','decode','resume','setColor'];
@@ -715,10 +634,10 @@ function renderHome(){
           <p>Заполните два поля — напряжение, ток, сопротивление или мощность.</p>
           <div class="arrow">→</div>
         </a>
-        <a href="#/tools" class="tool-card">
-          <div class="tool-icon">${icon('chart', 24)}</div>
-          <h3>Пересчёт АЦП</h3>
-          <p>Быстрый перевод значений analogRead() в реальное напряжение.</p>
+        <a href="errors.html" class="tool-card"> <!-- ССЫЛКА -->
+          <div class="tool-icon">${icon('chip', 24)}</div>
+          <h3>База ошибок</h3>
+          <p>Вставьте текст ошибки — найдём решение.</p>
           <div class="arrow">→</div>
         </a>
       </div>
