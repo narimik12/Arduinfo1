@@ -354,11 +354,13 @@ pre { padding: 24px; overflow-x: auto; font-family: var(--mono); font-size: 0.9r
 
 .toast{position:fixed;left:50%;bottom:30px;transform:translate(-50%,20px);background:var(--text);color:var(--bg);padding:12px 24px;border-radius:30px;font-weight:600;box-shadow:var(--shadow-lg);opacity:0;pointer-events:none;transition:all 0.3s;z-index:1000}
 .toast.show{opacity:1;transform:translate(-50%,0)}
-
-/* База ошибок */
-.errors-page{max-width:900px}.errors-page h1{margin:24px 0 10px}.errors-page .search-input{width:100%;margin:24px 0;padding:15px 18px;border:1px solid var(--border);border-radius:12px;background:var(--surface);color:var(--text);font:inherit;outline:none}.errors-page .search-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}.error-results{display:grid;gap:14px}.error-card{padding:20px;border:1px solid var(--border);border-radius:14px;background:var(--surface);box-shadow:var(--shadow)}.error-card h3{font:600 1rem var(--mono);color:var(--accent);overflow-wrap:anywhere;margin:0 0 10px}.error-card p{margin:0 0 14px}.error-solution{padding:14px;border-left:3px solid var(--accent);background:var(--surface-2);border-radius:8px}.error-solution b{display:block;margin-bottom:6px}.error-solution pre{white-space:pre-wrap;overflow-wrap:anywhere;background:var(--code-bg);color:var(--code-text);padding:12px;border-radius:8px;margin:12px 0 0;font: .88rem var(--mono)}.empty-state{padding:32px;text-align:center;color:var(--muted)}
-
 </style>
+
+<style>
+.errors-container{max-width:900px!important}.errors-section .error-search{display:block;width:100%;box-sizing:border-box;padding:15px 18px;margin:24px 0 28px;background:var(--surface);border:2px solid var(--border);border-radius:12px;color:var(--text);font:inherit;font-size:1rem;outline:none}.errors-section .error-search:focus{border-color:var(--accent)}
+.errors-section .error-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid #ff5f56;border-radius:12px;padding:20px;margin:0 0 16px}.errors-section .error-title{color:#ff7770;font-family:'JetBrains Mono',monospace;font-weight:700;margin-bottom:10px;overflow-wrap:anywhere}.errors-section .error-desc{margin-bottom:14px}.errors-section .solution-box{background:color-mix(in srgb,var(--accent) 10%,transparent);border:1px solid var(--accent);border-radius:9px;padding:14px}.errors-section .solution-title{color:var(--accent);font-size:.8rem;font-weight:800;text-transform:uppercase;margin-bottom:5px}.errors-section .code-fix{background:#0d1117;color:#c9d1d9;border:1px solid #333;border-radius:7px;padding:10px;margin-top:10px;font-family:monospace;overflow-x:auto}.errors-section .highlight{color:var(--accent);font-weight:700}.errors-section .error-empty{color:var(--muted);text-align:center;padding:40px 15px}
+</style>
+
 </head>
 <body>
 <a class="skip-link" href="#app" style="position:absolute;top:-100px;left:0;background:var(--accent);color:#fff;padding:10px;z-index:9999;">Перейти к содержимому</a>
@@ -377,7 +379,7 @@ pre { padding: 24px; overflow-x: auto; font-family: var(--mono); font-size: 0.9r
     </nav>
     <div class="header-actions">
       <button class="icon-btn" id="themeToggle" type="button"></button>
-      <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="Открыть меню" aria-expanded="false"></button>
+      <button class="icon-btn menu-btn" id="menuBtn" type="button"></button>
     </div>
   </div>
 </header>
@@ -539,11 +541,10 @@ function navigate(){
   document.title = 'ArduInfo — проекты, калькуляторы, справочники';
   const parts = hash.split('/').filter(Boolean);
   const page = parts[0] || '';
-  if(page === 'errors') document.title = 'База ошибок Arduino — ArduInfo';
 
   document.querySelectorAll('.nav a').forEach(a => {
     const href = a.getAttribute('href').slice(1);
-    a.classList.toggle('active', href === '/' + page || (page === '' && href === '/')); 
+    a.classList.toggle('active', href === '/' + page || (page === '' && href === '/'));
   });
 
   if(page === '') renderHome();
@@ -552,8 +553,8 @@ function navigate(){
   else if(page === 'resistor') renderResistor();
   else if(page === 'tools') renderTools();
   else if(page === 'basics') renderBasics();
-  else if(page === 'about') renderAbout();
   else if(page === 'errors') renderErrors();
+  else if(page === 'about') renderAbout();
   else render404();
 
   window.scrollTo(0,0);
@@ -562,10 +563,107 @@ function navigate(){
   document.getElementById('menuBtn').setAttribute('aria-expanded','false');
 }
 
-function escapeHTML(value){ return String(value).replace(/[&<>\"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[ch])); }
+
+
+/* База ошибок встроена в index.html: отдельной errors.html больше нет. */
+const ERRORS_DB = [
+  // --- СИНТАКСИС ---
+  { title: "expected ';' before '}' token", keywords: ["expected", "semicolon", "token", "before"], desc: "Пропущена точка с запятой в конце инструкции.", solution: "Проверьте строку перед закрывающей скобкой. Поставьте <code>;</code> после вызова функции.", example: "digitalWrite(13, HIGH)<span class='highlight'>;</span>" },
+  { title: "expected '}' at end of input", keywords: ["expected", "end", "input", "brace"], desc: "Не хватает закрывающей фигурной скобки.", solution: "Проверьте, все ли открытые <code>{</code> закрыты. В конце скетча должна быть закрыта функция loop().", example: "void loop() { ... <span class='highlight'>}</span>" },
+  { title: "expected initializer before 'int'", keywords: ["expected", "initializer", "before", "int"], desc: "Пропущена точка с запятой или скобка перед объявлением переменной.", solution: "Проверьте строку перед объявлением. Убедитесь, что предыдущая инструкция завершена <code>;</code>.", example: "int x = 5;<br><span class='highlight'>int y = 10;</span>" },
+  { title: "stray '\\' in program", keywords: ["stray", "backslash", "program"], desc: "Лишний символ обратной косой черты в коде.", solution: "Уберите символ <code>\\</code> из указанной строки.", example: "" },
+  { title: "stray '\\234' in program", keywords: ["stray", "234", "quotes", "smart"], desc: "В код попали «умные» кавычки при копировании.", solution: "Удалите кавычки и введите их заново с клавиатуры (полуширинные <code>\"</code> и <code>'</code>).", example: "" },
+  { title: "missing terminating \" character", keywords: ["missing", "terminating", "character", "quote"], desc: "Не закрыта двойная кавычка.", solution: "Поставьте закрывающую <code>\"</code> в конце строки.", example: "Serial.print(<span class='highlight'>\"Hello\"</span>);" },
+
+  // --- ОБЛАСТЬ ВИДИМОСТИ И ИМЕНА ---
+  { title: "'variable' was not declared in this scope", keywords: ["declared", "scope", "variable"], desc: "Переменная не объявлена или допущена опечатка в имени.", solution: "Проверьте написание и регистр. Переменная должна быть объявлена до использования.", example: "<span class='highlight'>int ledPin = 13;</span>" },
+  { title: "'pinMode' was not declared in this scope", keywords: ["pinmode", "declared", "scope"], desc: "Опечатка в названии функции (регистр).", solution: "Функции чувствительны к регистру: <code>pinMode</code> — верно, <code>pinmode</code> — ошибка.", example: "<span class='highlight'>pinMode</span>(13, OUTPUT);" },
+  { title: "'Serial' was not declared in this scope", keywords: ["serial", "declared", "scope"], desc: "Не вызван Serial.begin().", solution: "Добавьте <code>Serial.begin(9600);</code> в функцию setup().", example: "void setup() { <span class='highlight'>Serial.begin(9600);</span> }" },
+  { title: "redefinition of 'void setup()'", keywords: ["redefinition", "setup", "duplicate"], desc: "Функция setup() объявлена дважды.", solution: "В скетче может быть только одна <code>setup()</code> и одна <code>loop()</code>. Удалите дубликат.", example: "" },
+  { title: "undefined reference to 'setup'", keywords: ["undefined", "reference", "setup"], desc: "В скетче отсутствует обязательная функция.", solution: "Скетч обязан содержать <code>void setup() { }</code> и <code>void loop() { }</code>.", example: "void setup() { }<br>void loop() { }" },
+  { title: "'DHT' does not name a type", keywords: ["dht", "does not name", "type", "library"], desc: "Библиотека не установлена или не подключена.", solution: "Установите «DHT sensor library» от Adafruit через Менеджер библиотек.", example: "<span class='highlight'>#include &lt;DHT.h&gt;</span>" },
+
+  // --- ТИПЫ ДАННЫХ ---
+  { title: "invalid conversion from 'int' to 'const char*'", keywords: ["invalid", "conversion", "int", "char"], desc: "Число передаётся туда, где ожидается строка.", solution: "Используйте <code>String(число)</code>.", example: "Serial.print(<span class='highlight'>String(123)</span>);" },
+  { title: "cannot convert 'String' to 'const char*'", keywords: ["string", "char", "convert", "const"], desc: "Функция ожидает C-строку, а передан объект String.", solution: "Используйте <code>.c_str()</code>.", example: "Serial.print(<span class='highlight'>myString.c_str()</span>);" },
+  { title: "invalid conversion from 'const char*' to 'char'", keywords: ["invalid", "char", "quotes"], desc: "Строка в двойных кавычках присвоена типу char.", solution: "Для одного символа используйте одинарные кавычки: <code>'A'</code>.", example: "char grade = <span class='highlight'>'A'</span>;" },
+  { title: "conversion from 'double' to 'float'", keywords: ["double", "float", "conversion"], desc: "Потеря точности при преобразовании.", solution: "Приведите явно: <code>(float)3.14</code>.", example: "float f = <span class='highlight'>(float)</span>3.1415926535;" },
+
+  // --- БИБЛИОТЕКИ ---
+  { title: "fatal error: <library>: No such file or directory", keywords: ["fatal", "no such file", "library", "include"], desc: "Библиотека не установлена или имя файла написано с ошибкой.", solution: "Установите библиотеку через Менеджер библиотек. Проверьте регистр в <code>#include</code>.", example: "<span class='highlight'>#include &lt;Servo.h&gt;</span>" },
+  { title: "Multiple libraries were found for 'DHT.h'", keywords: ["multiple", "libraries", "found", "dht"], desc: "Установлено несколько версий библиотеки.", solution: "Удалите лишние версии из папки libraries. Оставьте только одну.", example: "" },
+  { title: "'class Servo' has no member named 'attach'", keywords: ["servo", "member", "attach", "class"], desc: "Опечатка в имени метода или объект не создан.", solution: "Объявите объект и вызывайте метод правильно.", example: "Servo <span class='highlight'>myServo</span>;<br>myServo.attach(9);" },
+  { title: "no matching function for call to 'tone(int, int)'", keywords: ["tone", "matching", "function", "call"], desc: "Неверное количество аргументов у tone().", solution: "tone() принимает 2 или 3 аргумента: <code>tone(pin, freq)</code>.", example: "<span class='highlight'>tone(8, 440);</span>" },
+  { title: "lcd.init() is not available", keywords: ["lcd", "init", "liquidcrystal"], desc: "В вашей версии библиотеки метод называется иначе.", solution: "Попробуйте <code>lcd.begin(16, 2);</code>.", example: "lcd.<span class='highlight'>begin</span>(16, 2);" },
+
+  // --- ЗАГРУЗКА / ПОРТ / AVRDUDE ---
+  { title: "avrdude: stk500_recv(): programmer is not responding", keywords: ["avrdude", "stk500", "programmer", "responding", "port"], desc: "Компьютер не видит плату Arduino.", solution: "1. Проверьте USB-кабель. 2. Установите драйвер CH340 для клонов. 3. Выберите COM-порт.", example: "" },
+  { title: "avrdude: ser_open(): can't open device", keywords: ["avrdude", "ser_open", "can't open", "device", "port"], desc: "Порт занят или плата отключена.", solution: "Закройте другие экземпляры IDE и монитор порта. Переподключите плату.", example: "" },
+  { title: "avrdude: ser_open(): can't set com-state for COMn", keywords: ["avrdude", "com-state", "ch340", "driver"], desc: "Проблема с драйвером CH340 (часто на клонах Nano).", solution: "Установите актуальный драйвер CH340.", example: "" },
+  { title: "Couldn't find a Board on the selected port", keywords: ["board", "selected", "port", "find"], desc: "Плата не определяется на выбранном порту.", solution: "Проверьте подключение, драйверы, выбранную модель платы.", example: "" },
+  { title: "Error compiling for board Arduino Uno", keywords: ["error compiling", "board", "uno"], desc: "Общая ошибка компиляции.", solution: "Прочитайте первые строки вывода. Обычно это пропущенная <code>;</code>.", example: "" },
+  { title: "exit status 1", keywords: ["exit status", "1"], desc: "Общая ошибка (компиляция или загрузка не удалась).", solution: "Смотрите строки перед «exit status 1» — там конкретная причина.", example: "" },
+
+  // --- ЛОГИКА / ПАМЯТЬ ---
+  { title: "invalid types 'int[int]' for array subscript", keywords: ["invalid", "types", "array", "subscript"], desc: "Массив индексируется неправильным типом.", solution: "Индекс массива должен быть целым числом.", example: "arr[<span class='highlight'>i</span>]" },
+  { title: "array must be initialized with a brace-enclosed initializer", keywords: ["array", "initialized", "brace"], desc: "Массив объявлен без инициализации.", solution: "Используйте фигурные скобки для инициализации.", example: "int arr[] = <span class='highlight'>{1, 2, 3}</span>;" },
+  { title: "assignment of read-only variable", keywords: ["assignment", "read-only", "variable", "const"], desc: "Попытка изменить константу.", solution: "Уберите <code>const</code>, если значение должно меняться.", example: "int x = 5; // без const" },
+  { title: "warning: integer overflow in expression", keywords: ["warning", "integer", "overflow", "expression"], desc: "Переполнение при вычислении.", solution: "Используйте <code>long</code> или <code>float</code> для больших чисел.", example: "long x = 100000 * 1000;" },
+  { title: "not enough memory", keywords: ["not enough", "memory", "ram", "sram"], desc: "Не хватает оперативной памяти (SRAM).", solution: "Используйте <code>F()</code> для строк, уменьшите размеры массивов, избегайте глобальных переменных.", example: "Serial.print(<span class='highlight'>F(\"Hello\")</span>);" },
+  { title: "low memory available, stability problems may occur", keywords: ["low memory", "stability", "sram"], desc: "Мало свободной памяти.", solution: "Оптимизируйте код, используйте <code>F()</code> для строк.", example: "" },
+  { title: "calling 'millis()' inside an interrupt", keywords: ["millis", "interrupt", "isr"], desc: "millis() не работает внутри прерываний.", solution: "Используйте <code>micros()</code> или таймеры для точных замеров в ISR.", example: "" },
+  { title: "unable to find string literal operator", keywords: ["string literal", "operator"], desc: "Проблема с кодировкой или кавычками.", solution: "Проверьте, нет ли в строке непечатных символов.", example: "" },
+  { title: "no return statement in function returning non-void", keywords: ["return", "statement", "non-void"], desc: "Функция должна возвращать значение, но не возвращает.", solution: "Добавьте <code>return значение;</code> в конце функции.", example: "int func() {<br>&nbsp;&nbsp;<span class='highlight'>return 0;</span><br>}" }
+];
+
+function renderErrors(){
+  app.innerHTML = `
+    <section class="section errors-section">
+      <div class="container errors-container">
+        <div class="breadcrumbs"><a href="#/">Главная</a><span>/</span><span>База ошибок</span></div>
+        <h1>🛠 База знаний по ошибкам</h1>
+        <p class="lead">Вставьте текст ошибки из Arduino IDE. Поиск поймёт, даже если скопировать всю строку.</p>
+        <input type="search" id="errorSearchInput" class="error-search" placeholder="Например: expected ';' before '}'..." autocomplete="off">
+        <div id="errorResults" aria-live="polite"></div>
+      </div>
+    </section>`;
+  const searchInput = document.getElementById('errorSearchInput');
+  const resultsDiv = document.getElementById('errorResults');
+  function searchErrors(query){
+    const q=query.toLowerCase().trim();
+    if(!q) return ERRORS_DB;
+    const words=q.split(/[\s,.:;!?()[\]{}'"]+/).filter(w=>w.length>2);
+    return ERRORS_DB.filter(err=>{
+      const title=err.title.toLowerCase(), desc=err.desc.toLowerCase();
+      return title.includes(q) || desc.includes(q) || err.keywords.some(kw=>q.includes(kw)) || words.some(word=>title.includes(word));
+    });
+  }
+  function render(){
+    const found=searchErrors(searchInput.value);
+    if(!found.length){
+      resultsDiv.innerHTML='<div class="error-empty">Ничего не найдено. Попробуйте ключевые слова: expected, Serial, avrdude.</div>';
+      return;
+    }
+    resultsDiv.innerHTML=found.map(err=>`
+      <article class="error-card">
+        <div class="error-title"></div><div class="error-desc"></div>
+        <div class="solution-box"><div class="solution-title">Решение</div><div class="solution-text"></div><div class="code-fix"></div></div>
+      </article>`).join('');
+    [...resultsDiv.querySelectorAll('.error-card')].forEach((card,i)=>{
+      const e=found[i];
+      card.querySelector('.error-title').textContent=e.title;
+      card.querySelector('.error-desc').textContent=e.desc;
+      card.querySelector('.solution-text').innerHTML=e.solution;
+      const example=card.querySelector('.code-fix');
+      if(e.example) example.innerHTML=e.example; else example.remove();
+    });
+  }
+  searchInput.addEventListener('input',render);
+  render();
+}
 
 function projectCard(p){
-  return '<a class="project-card" href="#/project/'+encodeURIComponent(p.id)+'" aria-label="Открыть проект: '+escapeHTML(p.title)+'">'+
+  return '<article class="project-card">'+
     '<div class="project-header">'+
       '<div class="project-icon">'+icon(p.icon, 32)+'</div>'+
       '<span class="badge">'+p.time+'</span>'+
@@ -578,7 +676,7 @@ function projectCard(p){
         '<span class="badge">'+p.level+'</span>'+
       '</div>'+
     '</div>'+
-  '</a>';
+  '</article>';
 }
 
 function renderHome(){
@@ -1344,83 +1442,6 @@ function renderAbout(){
   </section>`;
 }
 
-
-// База ошибок встроена в приложение: отдельная страница errors.html больше не нужна для навигации.
-const ERRORS_DB = [
-  // --- СИНТАКСИС ---
-  { title: "expected ';' before '}' token", keywords: ["expected", "semicolon", "token", "before"], desc: "Пропущена точка с запятой в конце инструкции.", solution: "Проверьте строку перед закрывающей скобкой. Поставьте <code>;</code> после вызова функции.", example: "digitalWrite(13, HIGH)<span class='highlight'>;</span>" },
-  { title: "expected '}' at end of input", keywords: ["expected", "end", "input", "brace"], desc: "Не хватает закрывающей фигурной скобки.", solution: "Проверьте, все ли открытые <code>{</code> закрыты. В конце скетча должна быть закрыта функция loop().", example: "void loop() { ... <span class='highlight'>}</span>" },
-  { title: "expected initializer before 'int'", keywords: ["expected", "initializer", "before", "int"], desc: "Пропущена точка с запятой или скобка перед объявлением переменной.", solution: "Проверьте строку перед объявлением. Убедитесь, что предыдущая инструкция завершена <code>;</code>.", example: "int x = 5;<br><span class='highlight'>int y = 10;</span>" },
-  { title: "stray '\\' in program", keywords: ["stray", "backslash", "program"], desc: "Лишний символ обратной косой черты в коде.", solution: "Уберите символ <code>\\</code> из указанной строки.", example: "" },
-  { title: "stray '\\234' in program", keywords: ["stray", "234", "quotes", "smart"], desc: "В код попали «умные» кавычки при копировании.", solution: "Удалите кавычки и введите их заново с клавиатуры (полуширинные <code>\"</code> и <code>'</code>).", example: "" },
-  { title: "missing terminating \" character", keywords: ["missing", "terminating", "character", "quote"], desc: "Не закрыта двойная кавычка.", solution: "Поставьте закрывающую <code>\"</code> в конце строки.", example: "Serial.print(<span class='highlight'>\"Hello\"</span>);" },
-
-  // --- ОБЛАСТЬ ВИДИМОСТИ И ИМЕНА ---
-  { title: "'variable' was not declared in this scope", keywords: ["declared", "scope", "variable"], desc: "Переменная не объявлена или допущена опечатка в имени.", solution: "Проверьте написание и регистр. Переменная должна быть объявлена до использования.", example: "<span class='highlight'>int ledPin = 13;</span>" },
-  { title: "'pinMode' was not declared in this scope", keywords: ["pinmode", "declared", "scope"], desc: "Опечатка в названии функции (регистр).", solution: "Функции чувствительны к регистру: <code>pinMode</code> — верно, <code>pinmode</code> — ошибка.", example: "<span class='highlight'>pinMode</span>(13, OUTPUT);" },
-  { title: "'Serial' was not declared in this scope", keywords: ["serial", "declared", "scope"], desc: "Не вызван Serial.begin().", solution: "Добавьте <code>Serial.begin(9600);</code> в функцию setup().", example: "void setup() { <span class='highlight'>Serial.begin(9600);</span> }" },
-  { title: "redefinition of 'void setup()'", keywords: ["redefinition", "setup", "duplicate"], desc: "Функция setup() объявлена дважды.", solution: "В скетче может быть только одна <code>setup()</code> и одна <code>loop()</code>. Удалите дубликат.", example: "" },
-  { title: "undefined reference to 'setup'", keywords: ["undefined", "reference", "setup"], desc: "В скетче отсутствует обязательная функция.", solution: "Скетч обязан содержать <code>void setup() { }</code> и <code>void loop() { }</code>.", example: "void setup() { }<br>void loop() { }" },
-  { title: "'DHT' does not name a type", keywords: ["dht", "does not name", "type", "library"], desc: "Библиотека не установлена или не подключена.", solution: "Установите «DHT sensor library» от Adafruit через Менеджер библиотек.", example: "<span class='highlight'>#include &lt;DHT.h&gt;</span>" },
-
-  // --- ТИПЫ ДАННЫХ ---
-  { title: "invalid conversion from 'int' to 'const char*'", keywords: ["invalid", "conversion", "int", "char"], desc: "Число передаётся туда, где ожидается строка.", solution: "Используйте <code>String(число)</code>.", example: "Serial.print(<span class='highlight'>String(123)</span>);" },
-  { title: "cannot convert 'String' to 'const char*'", keywords: ["string", "char", "convert", "const"], desc: "Функция ожидает C-строку, а передан объект String.", solution: "Используйте <code>.c_str()</code>.", example: "Serial.print(<span class='highlight'>myString.c_str()</span>);" },
-  { title: "invalid conversion from 'const char*' to 'char'", keywords: ["invalid", "char", "quotes"], desc: "Строка в двойных кавычках присвоена типу char.", solution: "Для одного символа используйте одинарные кавычки: <code>'A'</code>.", example: "char grade = <span class='highlight'>'A'</span>;" },
-  { title: "conversion from 'double' to 'float'", keywords: ["double", "float", "conversion"], desc: "Потеря точности при преобразовании.", solution: "Приведите явно: <code>(float)3.14</code>.", example: "float f = <span class='highlight'>(float)</span>3.1415926535;" },
-
-  // --- БИБЛИОТЕКИ ---
-  { title: "fatal error: <library>: No such file or directory", keywords: ["fatal", "no such file", "library", "include"], desc: "Библиотека не установлена или имя файла написано с ошибкой.", solution: "Установите библиотеку через Менеджер библиотек. Проверьте регистр в <code>#include</code>.", example: "<span class='highlight'>#include &lt;Servo.h&gt;</span>" },
-  { title: "Multiple libraries were found for 'DHT.h'", keywords: ["multiple", "libraries", "found", "dht"], desc: "Установлено несколько версий библиотеки.", solution: "Удалите лишние версии из папки libraries. Оставьте только одну.", example: "" },
-  { title: "'class Servo' has no member named 'attach'", keywords: ["servo", "member", "attach", "class"], desc: "Опечатка в имени метода или объект не создан.", solution: "Объявите объект и вызывайте метод правильно.", example: "Servo <span class='highlight'>myServo</span>;<br>myServo.attach(9);" },
-  { title: "no matching function for call to 'tone(int, int)'", keywords: ["tone", "matching", "function", "call"], desc: "Неверное количество аргументов у tone().", solution: "tone() принимает 2 или 3 аргумента: <code>tone(pin, freq)</code>.", example: "<span class='highlight'>tone(8, 440);</span>" },
-  { title: "lcd.init() is not available", keywords: ["lcd", "init", "liquidcrystal"], desc: "В вашей версии библиотеки метод называется иначе.", solution: "Попробуйте <code>lcd.begin(16, 2);</code>.", example: "lcd.<span class='highlight'>begin</span>(16, 2);" },
-
-  // --- ЗАГРУЗКА / ПОРТ / AVRDUDE ---
-  { title: "avrdude: stk500_recv(): programmer is not responding", keywords: ["avrdude", "stk500", "programmer", "responding", "port"], desc: "Компьютер не видит плату Arduino.", solution: "1. Проверьте USB-кабель. 2. Установите драйвер CH340 для клонов. 3. Выберите COM-порт.", example: "" },
-  { title: "avrdude: ser_open(): can't open device", keywords: ["avrdude", "ser_open", "can't open", "device", "port"], desc: "Порт занят или плата отключена.", solution: "Закройте другие экземпляры IDE и монитор порта. Переподключите плату.", example: "" },
-  { title: "avrdude: ser_open(): can't set com-state for COMn", keywords: ["avrdude", "com-state", "ch340", "driver"], desc: "Проблема с драйвером CH340 (часто на клонах Nano).", solution: "Установите актуальный драйвер CH340.", example: "" },
-  { title: "Couldn't find a Board on the selected port", keywords: ["board", "selected", "port", "find"], desc: "Плата не определяется на выбранном порту.", solution: "Проверьте подключение, драйверы, выбранную модель платы.", example: "" },
-  { title: "Error compiling for board Arduino Uno", keywords: ["error compiling", "board", "uno"], desc: "Общая ошибка компиляции.", solution: "Прочитайте первые строки вывода. Обычно это пропущенная <code>;</code>.", example: "" },
-  { title: "exit status 1", keywords: ["exit status", "1"], desc: "Общая ошибка (компиляция или загрузка не удалась).", solution: "Смотрите строки перед «exit status 1» — там конкретная причина.", example: "" },
-
-  // --- ЛОГИКА / ПАМЯТЬ ---
-  { title: "invalid types 'int[int]' for array subscript", keywords: ["invalid", "types", "array", "subscript"], desc: "Массив индексируется неправильным типом.", solution: "Индекс массива должен быть целым числом.", example: "arr[<span class='highlight'>i</span>]" },
-  { title: "array must be initialized with a brace-enclosed initializer", keywords: ["array", "initialized", "brace"], desc: "Массив объявлен без инициализации.", solution: "Используйте фигурные скобки для инициализации.", example: "int arr[] = <span class='highlight'>{1, 2, 3}</span>;" },
-  { title: "assignment of read-only variable", keywords: ["assignment", "read-only", "variable", "const"], desc: "Попытка изменить константу.", solution: "Уберите <code>const</code>, если значение должно меняться.", example: "int x = 5; // без const" },
-  { title: "warning: integer overflow in expression", keywords: ["warning", "integer", "overflow", "expression"], desc: "Переполнение при вычислении.", solution: "Используйте <code>long</code> или <code>float</code> для больших чисел.", example: "long x = 100000 * 1000;" },
-  { title: "not enough memory", keywords: ["not enough", "memory", "ram", "sram"], desc: "Не хватает оперативной памяти (SRAM).", solution: "Используйте <code>F()</code> для строк, уменьшите размеры массивов, избегайте глобальных переменных.", example: "Serial.print(<span class='highlight'>F(\"Hello\")</span>);" },
-  { title: "low memory available, stability problems may occur", keywords: ["low memory", "stability", "sram"], desc: "Мало свободной памяти.", solution: "Оптимизируйте код, используйте <code>F()</code> для строк.", example: "" },
-  { title: "calling 'millis()' inside an interrupt", keywords: ["millis", "interrupt", "isr"], desc: "millis() не работает внутри прерываний.", solution: "Используйте <code>micros()</code> или таймеры для точных замеров в ISR.", example: "" },
-  { title: "unable to find string literal operator", keywords: ["string literal", "operator"], desc: "Проблема с кодировкой или кавычками.", solution: "Проверьте, нет ли в строке непечатных символов.", example: "" },
-  { title: "no return statement in function returning non-void", keywords: ["return", "statement", "non-void"], desc: "Функция должна возвращать значение, но не возвращает.", solution: "Добавьте <code>return значение;</code> в конце функции.", example: "int func() {<br>&nbsp;&nbsp;<span class='highlight'>return 0;</span><br>}" }
-];
-
-function renderErrors(){
-  app.innerHTML = `
-    <section class="section"><div class="container errors-page">
-      <div class="breadcrumbs"><a href="#/">Главная</a><span>/</span><span>База ошибок</span></div>
-      <h1>База знаний по ошибкам</h1>
-      <p class="lead">Вставьте текст ошибки из Arduino IDE. Поиск поможет найти причину и решение.</p>
-      <input type="search" id="errorSearch" class="search-input" placeholder="Например: expected ';' before '}'..." autocomplete="off">
-      <div id="errorResults" class="error-results" aria-live="polite"></div>
-    </div></section>`;
-  const input = document.getElementById('errorSearch');
-  const results = document.getElementById('errorResults');
-  function search(query){
-    const q=query.toLowerCase().trim();
-    if(!q) return ERRORS_DB;
-    const words=q.split(/[\s,.:;!?()[\]{}'"]+/).filter(w=>w.length>2);
-    return ERRORS_DB.filter(err => err.title.toLowerCase().includes(q) || err.desc.toLowerCase().includes(q) || err.keywords.some(k=>q.includes(k) || k.includes(q)) || words.some(w=>err.title.toLowerCase().includes(w) || err.keywords.some(k=>k.includes(w))));
-  }
-  function draw(){
-    const found=search(input.value);
-    results.innerHTML=found.length ? found.map(err=>`<article class="error-card"><h3>${err.title}</h3><p>${err.desc}</p><div class="error-solution"><b>Решение</b><div>${err.solution}</div>${err.example?`<pre>${err.example}</pre>`:''}</div></article>`).join('') : '<p class="empty-state">Ничего не найдено. Попробуйте слова expected, Serial или avrdude.</p>';
-  }
-  input.addEventListener('input',draw);
-  draw();
-}
-
 function render404(){
   app.innerHTML = `
   <section class="section">
@@ -1473,7 +1494,6 @@ function bindCopyButtons(){
   if(!saved) saved = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   document.documentElement.setAttribute('data-theme', saved);
   document.getElementById('themeToggle').innerHTML = icon(saved === 'dark' ? 'sun' : 'moon', 20);
-  document.getElementById('menuBtn').innerHTML = icon('menu', 22);
 })();
 
 document.getElementById('themeToggle').addEventListener('click', () => {
@@ -1621,6 +1641,61 @@ navigate();
     return div;
   }
 
+  // Собираем актуальный контекст открытой страницы перед каждым вопросом.
+  // Включаем весь видимый текст, заголовки, код, ссылки, изображения (alt/подписи)
+  // и текущее состояние элементов управления. Не отправляем HTML/CSS/скрипты и чат.
+  function collectPageContext(){
+    const root=document.getElementById('app');
+    if(!root) return {url:location.href,title:document.title,content:''};
+    const route=(location.hash.slice(1)||'/').split('?')[0];
+    const labels={
+      '/':'Главная', '/projects':'Каталог проектов', '/project':'Страница проекта',
+      '/tools':'Инструменты и инженерные калькуляторы', '/resistor':'Калькулятор резисторов',
+      '/basics':'Основы Arduino', '/about':'О сайте', '/errors':'База ошибок Arduino'
+    };
+    const routeParts=route.split('/').filter(Boolean);
+    const routeKey=routeParts.length>1 && routeParts[0]==='project' ? '/project' : route;
+    const cleanText=el=>(el?.innerText||el?.textContent||'').replace(/\n{3,}/g,'\n\n').trim();
+    const visible=[...root.querySelectorAll('input,textarea,select,button,[role="button"],img,details')]
+      .filter(el=>el.getClientRects().length && getComputedStyle(el).visibility!=='hidden');
+    const controls=visible.map(el=>{
+      const tag=el.tagName.toLowerCase();
+      if(tag==='img') return `Изображение: ${el.alt||el.title||'без описания'}${el.closest('figure')?'; подпись: '+cleanText(el.closest('figure').querySelector('figcaption')):''}`;
+      if(tag==='details') return `Раскрываемый блок (${el.open?'открыт':'закрыт'}): ${cleanText(el)}`;
+      if(tag==='input'||tag==='textarea'||tag==='select'){
+        const label=el.labels?.[0]?.innerText || el.getAttribute('aria-label') || el.placeholder || el.name || el.id || tag;
+        return `Поле «${label}»: ${el.type==='checkbox'||el.type==='radio'?(el.checked?'включено':'выключено'):(el.value||'пусто')}`;
+      }
+      const label=el.getAttribute('aria-label')||el.title||cleanText(el);
+      return label?`${tag==='button'?'Кнопка':'Элемент управления'}: ${label}`:'';
+    }).filter(Boolean);
+    const links=[...root.querySelectorAll('a[href]')].filter(el=>el.getClientRects().length).map(a=>`${cleanText(a)||a.getAttribute('aria-label')||'ссылка'} → ${a.getAttribute('href')}`);
+    const headings=[...root.querySelectorAll('h1,h2,h3,h4')].filter(el=>el.getClientRects().length).map(cleanText).filter(Boolean);
+    const code=[...root.querySelectorAll('pre,code')].filter(el=>el.getClientRects().length).map(cleanText);
+    const context={
+      pageName:labels[routeKey]||'Раздел ArduInfo', route, url:location.href, documentTitle:document.title,
+      headings:[...new Set(headings)].slice(0,80),
+      visibleContent:cleanText(root),
+      codeExamples:[...new Set(code)].slice(0,20),
+      controls:controls.slice(0,100),
+      links:[...new Set(links)].slice(0,100),
+      siteNavigation:cleanText(document.getElementById('nav')),
+      siteFooter:cleanText(document.querySelector('.site-footer')),
+      instruction:'Используй контекст как справочную информацию об открытом экране. Не сообщай пользователю, что знаешь его страницу, и не пересказывай контекст без необходимости. Учитывай конкретные тексты, значения полей, выбранные параметры и примеры кода.'
+    };
+    // Ограничение защищает запрос от чрезмерно длинных страниц, сохраняя основное содержимое.
+    let packed=JSON.stringify(context);
+    if(packed.length>26000){
+      context.visibleContent=context.visibleContent.slice(0,12000);
+      context.codeExamples=context.codeExamples.map(x=>x.slice(0,1600)).slice(0,12);
+      context.links=context.links.slice(0,60);
+      context.controls=context.controls.slice(0,70);
+      packed=JSON.stringify(context);
+    }
+    if(packed.length>26000) context.visibleContent=context.visibleContent.slice(0,Math.max(1000,12000-(packed.length-26000)));
+    return context;
+  }
+
   async function ask(){
     const text = input.value.trim();
     if (!text || busy) return;
@@ -1637,7 +1712,7 @@ navigate();
       const res = await fetch(AI_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text })
+        body: JSON.stringify({ message: text, pageContext: collectPageContext() })
       });
       const data = await res.json();
       loading.classList.remove('typing');
