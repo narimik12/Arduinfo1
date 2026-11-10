@@ -412,7 +412,7 @@ pre { padding: 24px; overflow-x: auto; font-family: var(--mono); font-size: 0.9r
       <a href="#/tools">Инструменты</a>
       <a href="#/resistor">Резисторы</a>
       <a href="#/basics">Основы</a>
-      <a href="#/errors">Ошибки</a> <!-- ССЫЛКА НА БАЗУ ОШИБОК -->
+      <a href="#/errors"><span data-icon="errorDatabase" data-icon-size="16"></span> Ошибки</a> <!-- БАЗА ОШИБОК -->
       <a href="#/about">О сайте</a>
     </nav>
     <div class="header-actions">
@@ -438,7 +438,7 @@ pre { padding: 24px; overflow-x: auto; font-family: var(--mono); font-size: 0.9r
           <li><a href="#/tools">Инструменты</a></li>
           <li><a href="#/resistor">Калькулятор резисторов</a></li>
           <li><a href="#/basics">Основы</a></li>
-          <li><a href="#/errors">База ошибок</a></li> <!-- ССЫЛКА -->
+          <li><a href="#/errors"><span data-icon="errorDatabase" data-icon-size="16"></span> База ошибок</a></li>
         </ul>
       </div>
       <div class="footer-col">
@@ -659,7 +659,7 @@ function renderErrors(){
     <section class="section errors-section">
       <div class="container errors-container">
         <div class="breadcrumbs"><a href="#/">Главная</a><span>/</span><span>База ошибок</span></div>
-        <h1>🛠 База знаний по ошибкам</h1>
+        <h1>${icon('errorDatabase', 34)} База знаний по ошибкам</h1>
         <p class="lead">Вставьте текст ошибки из Arduino IDE. Поиск поймёт, даже если скопировать всю строку.</p>
         <input type="search" id="errorSearchInput" class="error-search" placeholder="Например: expected ';' before '}'..." autocomplete="off">
         <div id="errorResults" aria-live="polite"></div>
@@ -793,7 +793,7 @@ function renderHome(){
           <div class="arrow">→</div>
         </a>
         <a href="#/errors" class="tool-card"> <!-- ССЫЛКА -->
-          <div class="tool-icon">${icon('chip', 24)}</div>
+          <div class="tool-icon">${icon('errorDatabase', 24)}</div>
           <h3>База ошибок</h3>
           <p>Вставьте текст ошибки — найдём решение.</p>
           <div class="arrow">→</div>
@@ -1469,6 +1469,11 @@ function renderAbout(){
             <h3>Калькуляторы</h3>
             <p>Резисторы, закон Ома, LED, АЦП и другое.</p>
           </div>
+          <a class="tool-card" href="#/errors">
+            <div class="tool-icon">${icon('errorDatabase', 24)}</div>
+            <h3>База ошибок Arduino</h3>
+            <p>Справочник распространённых ошибок компиляции и загрузки с объяснениями и вариантами решений.</p>
+          </a>
         </div>
       </div>
 

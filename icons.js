@@ -24,6 +24,7 @@ const ICONS = {
   remote:'<rect x="6" y="2" width="12" height="20" rx="3"/><circle cx="12" cy="8" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="12" cy="16" r="1.2"/>',
   bolt:'<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
   chip:'<rect x="5" y="5" width="14" height="14" rx="2"/><rect x="9" y="9" width="6" height="6" rx="1"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/>',
+  errorDatabase:'<ellipse cx="10.5" cy="5" rx="7.5" ry="2.8"/><path d="M3 5v4.5c0 1.5 3.4 2.8 7.5 2.8 1.2 0 2.4-.1 3.4-.4M3 9.5V14c0 1.5 3.4 2.8 7.5 2.8 1.1 0 2.1-.1 3-.3"/><path d="M18 11.5v3.2M18 18.2v.1"/><path d="M14.5 8.5c1.1-.8 2.5-1.3 4-1.3 1.4 0 2.5.3 3.5.9v8.4c-1-.6-2.1-.9-3.5-.9-1.5 0-2.9.5-4 1.3z"/>',
   ruler:'<path d="M14 2 22 10 10 22 2 14z"/><path d="M7 11l2 2M10 8l2 2M13 5l2 2"/>',
   battery:'<rect x="2" y="7" width="18" height="10" rx="2"/><line x1="22" y1="11" x2="22" y2="13"/><rect x="4" y="9" width="6" height="6" rx="1"/>',
   chart:'<line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/>',
@@ -46,4 +47,18 @@ function icon(name, size){
   if(!path) return '';
   const s = size || 20;
   return '<svg width="'+s+'" height="'+s+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-3px;flex-shrink:0">' + path + '</svg>';
+}
+
+// Иконки в статической разметке (шапка и подвал).
+function renderStaticIcons(){
+  document.querySelectorAll('[data-icon]').forEach(el=>{
+    const name=el.getAttribute('data-icon');
+    const size=Number(el.getAttribute('data-icon-size'))||20;
+    el.innerHTML=icon(name,size);
+  });
+}
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded',renderStaticIcons,{once:true});
+}else{
+  renderStaticIcons();
 }
