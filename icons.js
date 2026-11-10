@@ -6,7 +6,7 @@
 const ICONS = {
   home:'<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V9.5"/>',
   book:'<path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v16H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>',
-  errorBook:'<path d="M3 5.5A3.5 3.5 0 0 1 6.5 2H11v17H6.5A3.5 3.5 0 0 0 3 22z"/><path d="M19 5.5A3.5 3.5 0 0 0 15.5 2H13v17h2.5A3.5 3.5 0 0 1 19 22z"/><path d="M12 5v14"/><circle cx="20" cy="5" r="3.2" fill="var(--surface)"/><path d="M20 3.6v1.9M20 6.5v.1" stroke-width="1.7"/>',
+  errorBook:'<path d="M2.8 6.1c3.1-1.1 6.2-.6 9.2 1.5v13c-3-2.1-6.1-2.6-9.2-1.5z"/><path d="M12 7.6c3-2.1 6.1-2.6 9.2-1.5v13c-3.1-1.1-6.2-.6-9.2 1.5z"/><path d="M12 7.6v13"/><circle cx="19.1" cy="4.8" r="3.6" fill="var(--surface)"/><path d="M19.1 2.9v2.2M19.1 6.3v.1" stroke-width="1.9"/>',
   tools:'<path d="M14.7 6.3a4 4 0 0 0 5 5l-9.4 9.4a2.1 2.1 0 0 1-3-3z"/><path d="m14.7 6.3 3-3 5 5-3 3"/>',
   calculator:'<rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="11" x2="8" y2="11"/><line x1="12" y1="11" x2="12" y2="11"/><line x1="16" y1="11" x2="16" y2="11"/><line x1="8" y1="15" x2="8" y2="15"/><line x1="12" y1="15" x2="12" y2="15"/><line x1="16" y1="15" x2="16" y2="18"/>',
   info:'<circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16"/><line x1="12" y1="8" x2="12" y2="8"/>',
@@ -25,7 +25,6 @@ const ICONS = {
   remote:'<rect x="6" y="2" width="12" height="20" rx="3"/><circle cx="12" cy="8" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="12" cy="16" r="1.2"/>',
   bolt:'<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
   chip:'<rect x="5" y="5" width="14" height="14" rx="2"/><rect x="9" y="9" width="6" height="6" rx="1"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/>',
-  errorDatabase:'<ellipse cx="10.5" cy="5" rx="7.5" ry="2.8"/><path d="M3 5v4.5c0 1.5 3.4 2.8 7.5 2.8 1.2 0 2.4-.1 3.4-.4M3 9.5V14c0 1.5 3.4 2.8 7.5 2.8 1.1 0 2.1-.1 3-.3"/><path d="M18 11.5v3.2M18 18.2v.1"/><path d="M14.5 8.5c1.1-.8 2.5-1.3 4-1.3 1.4 0 2.5.3 3.5.9v8.4c-1-.6-2.1-.9-3.5-.9-1.5 0-2.9.5-4 1.3z"/>',
   ruler:'<path d="M14 2 22 10 10 22 2 14z"/><path d="M7 11l2 2M10 8l2 2M13 5l2 2"/>',
   battery:'<rect x="2" y="7" width="18" height="10" rx="2"/><line x1="22" y1="11" x2="22" y2="13"/><rect x="4" y="9" width="6" height="6" rx="1"/>',
   chart:'<line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/>',
